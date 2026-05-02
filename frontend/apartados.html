@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Apartados — Tejidos Castañeda</title>
+<link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<nav class="tc-nav">
+  <div class="tc-nav-brand">
+    <img id="nav-logo" src="/img/logo.svg" alt="Logo">
+    <span id="nav-biz">Tejidos Castañeda</span>
+  </div>
+  <div class="tc-nav-right">
+    <span id="nav-empleado" class="tc-nav-user"></span>
+    <span id="nav-rol" class="tc-nav-rol"></span>
+    <a href="/dashboard.html" class="tc-nav-link">Dashboard</a>
+    <a href="/pos.html" class="tc-nav-link">POS</a>
+    <button onclick="cerrarSesion()" class="tc-btn-logout">Salir</button>
+  </div>
+</nav>
+
+<div class="tc-wrap">
+
+  <div id="alerta-vencidos" class="tc-alert tc-alert-warn" style="display:none">
+    <span>⚠️ Hay <strong id="num-vencidos"></strong> apartado(s) vencido(s).</span>
+    <button onclick="this.closest('.tc-alert').style.display='none'">×</button>
+  </div>
+
+  <div class="tc-page-header">
+    <div>
+      <h1 class="tc-page-title">Apartados</h1>
+      <p class="tc-page-sub">Separaciones con abono mínimo $20.000 · Plazo 30 días</p>
+    </div>
+    <button class="btn-primary" onclick="AP.abrirNuevo()">+ Nuevo apartado</button>
+  </div>
+
+  <div class="tc-filters">
+    <button class="tc-pill active" onclick="AP.filtrar('',this)">Todos</button>
+    <button class="tc-pill" onclick="AP.filtrar('activo',this)">Activos</button>
+    <button class="tc-pill tc-pill-warn" onclick="AP.filtrar('vencido',this)">
+      Vencidos <span class="tc-badge-n" id="badge-venc" style="display:none"></span>
+    </button>
+    <button class="tc-pill" onclick="AP.filtrar('completado',this)">Completados</button>
+    <button class="tc-pill" onclick="AP.filtrar('cancelado',this)">Cancelados</button>
+    <input type="search" id="buscar-ap" class="tc-input" placeholder="Buscar cliente..." style="max-width:200px;margin-left:auto" oninput="AP.buscar()">
+  </div>
+
+  <div class="tc-table-wrap">
+    <table class="tc-table">
+      <thead><tr><th>#</th><th>Cliente</th><th>Total</th><th>Abonado</th><th>Saldo</th><th>Vencimiento</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody id="tabla-ap"><tr><td colspan="8" class="tc-empty">Cargando...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL NUEVO APARTADO -->
+<div class="tc-overlay" id="modal-nuevo" style="display:none">
+  <div class="tc-modal" style="max-width:560px">
+    <div class="tc-modal-hdr">
+      <h3>Nuevo apartado</h3>
+      <button class="tc-modal-close" onclick="hideModal('modal-nuevo')">×</button>
+    </div>
+    <div class="tc-modal-body">
+      <div class="tc-form-group">
+        <label class="tc-label">Cliente *</label>
+        <select id="ap-cliente" class="tc-select">
+          <option value="">Seleccionar cliente...</option>
+        </select>
+      </div>
+      <div class="tc-form-group">
+        <label class="tc-label">Productos a apartar *</label>
+        <div id="ap-items"></div>
+        <button class="btn-secondary" style="margin-top:8px;font-size:12px" onclick="AP.addItem()">+ Agregar producto</button>
+      </div>
+      <div id="ap-resumen" class="tc-alert tc-alert-ok" style="display:none;flex-direction:column;gap:4px">
+        <div style="display:flex;justify-content:space-between"><span>Total calculado</span><strong id="ap-total-calc">$ 0</strong></div>
+        <div style="display:flex;justify-content:space-between"><span>Saldo pendiente</span><strong id="ap-saldo-calc">$ 0</strong></div>
+      </div>
+      <div class="tc-form-row" style="margin-top:12px">
+        <div class="tc-form-group">
+          <label class="tc-label">Abono inicial * <small>(mín. $ 20.000)</small></label>
+          <input type="number" id="ap-abono" class="tc-input" placeholder="20000" min="20000" oninput="AP.calcular()">
+        </div>
+        <div class="tc-form-group">
+          <label class="tc-label">Método de pago</label>
+          <select id="ap-metodo" class="tc-select">
+            <option value="efectivo">Efectivo</option>
+            <option value="nequi">Nequi</option>
+            <option value="daviplata">Daviplata</option>
+            <option value="bold">Bold</option>
+          </select>
+        </div>
+      </div>
+      <div class="tc-form-group">
+        <label class="tc-label">Notas</label>
+        <textarea id="ap-notas" class="tc-input" rows="2" placeholder="Observaciones..."></textarea>
+      </div>
+      <div id="ap-err" class="tc-alert tc-alert-err" style="display:none"></div>
+    </div>
+    <div class="tc-modal-footer">
+      <button class="btn-secondary" onclick="hideModal('modal-nuevo')">Cancelar</button>
+      <button class="btn-primary" onclick="AP.guardar()">Crear apartado</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PAGO -->
+<div class="tc-overlay" id="modal-pago" style="display:none">
+  <div class="tc-modal" style="max-width:400px">
+    <div class="tc-modal-hdr">
+      <h3>Registrar abono</h3>
+      <button class="tc-modal-close" onclick="hideModal('modal-pago')">×</button>
+    </div>
+    <div class="tc-modal-body">
+      <p style="font-size:13px;color:var(--txt2);margin-bottom:14px">
+        Apartado <strong id="pago-id"></strong> · Saldo: <strong id="pago-saldo"></strong>
+      </p>
+      <div class="tc-form-group">
+        <label class="tc-label">Monto del abono *</label>
+        <input type="number" id="pago-monto" class="tc-input" placeholder="0" min="1">
+      </div>
+      <div class="tc-form-group">
+        <label class="tc-label">Método</label>
+        <select id="pago-metodo" class="tc-select">
+          <option value="efectivo">Efectivo</option>
+          <option value="nequi">Nequi</option>
+          <option value="daviplata">Daviplata</option>
+          <option value="bold">Bold</option>
+        </select>
+      </div>
+      <div id="pago-err" class="tc-alert tc-alert-err" style="display:none"></div>
+    </div>
+    <div class="tc-modal-footer">
+      <button class="btn-secondary" onclick="hideModal('modal-pago')">Cancelar</button>
+      <button class="btn-primary" onclick="AP.confirmarPago()">Registrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DETALLE -->
+<div class="tc-overlay" id="modal-detalle" style="display:none">
+  <div class="tc-modal" style="max-width:520px">
+    <div class="tc-modal-hdr">
+      <h3 id="det-titulo">Apartado #</h3>
+      <button class="tc-modal-close" onclick="hideModal('modal-detalle')">×</button>
+    </div>
+    <div class="tc-modal-body" id="det-body"><p class="tc-empty">Cargando...</p></div>
+    <div class="tc-modal-footer">
+      <button class="btn-secondary" onclick="hideModal('modal-detalle')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script>
+proteger();
+let todos=[], prods=[], filtroActual='', apPagoId=null, apPagoSaldo=0, itemsForm=[];
+
+const AP={
+  async init(){
+    await Promise.all([this.cargarClientes(), this.cargarProductos(), this.cargarApartados()]);
+    const v=await api('/apartados/vencidos');
+    if(v?.total>0){
+      document.getElementById('badge-venc').textContent=v.total;
+      document.getElementById('badge-venc').style.display='inline-flex';
+    }
+  },
+  async cargarClientes(){
+    const r=await api('/clientes');
+    if(!r?.ok)return;
+    const sel=document.getElementById('ap-cliente');
+    r.clientes.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.nombre+(c.telefono?' — '+c.telefono:'');sel.appendChild(o)});
+  },
+  async cargarProductos(){
+    const r=await api('/productos?conStock=1');
+    if(r?.ok)prods=r.productos;
+  },
+  async cargarApartados(estado){
+    const url='/apartados'+(estado?'?estado='+estado:'');
+    const r=await api(url);
+    if(r?.ok){todos=r.apartados;this.renderTabla(r.apartados)}
+  },
+  filtrar(estado,btn){
+    filtroActual=estado;
+    document.querySelectorAll('.tc-pill').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    this.cargarApartados(estado);
+  },
+  buscar(){
+    const q=document.getElementById('buscar-ap').value.toLowerCase();
+    const f=todos.filter(a=>a.cliente_nombre.toLowerCase().includes(q));
+    this.renderTabla(f);
+  },
+  renderTabla(lista){
+    const tbody=document.getElementById('tabla-ap');
+    if(!lista.length){tbody.innerHTML='<tr><td colspan="8" class="tc-empty">Sin apartados</td></tr>';return}
+    tbody.innerHTML=lista.map(a=>{
+      const badge=this.badge(a.estado);
+      const dias=a.dias_restantes;
+      const diasTxt=a.estado==='completado'?'Saldado':a.estado==='cancelado'?'Cancelado':dias<0?`Vencido ${Math.abs(dias)}d`:dias===0?'Vence hoy':`${dias}d restante(s)`;
+      const diasColor=dias<0&&!['completado','cancelado'].includes(a.estado)?'var(--danger)':'var(--txt3)';
+      const acciones=(['activo','vencido'].includes(a.estado))?
+        `<button class="btn-sm" onclick="AP.abrirPago(${a.id},${a.saldo_pendiente})">Abonar</button>
+         <button class="btn-danger" onclick="AP.cancelar(${a.id})">Cancelar</button>
+         <button class="btn-sm" onclick="AP.verDetalle(${a.id})">Ver</button>`
+        :`<button class="btn-sm" onclick="AP.verDetalle(${a.id})">Ver</button>`;
+      return`<tr>
+        <td style="font-weight:500">#${a.id}</td>
+        <td><div style="font-weight:500">${a.cliente_nombre}</div><div style="font-size:11px;color:var(--txt3)">${a.cliente_telefono||''}</div></td>
+        <td>${fmt(a.total_apartado)}</td>
+        <td style="color:var(--success)">${fmt(a.total_abonado||a.abono_inicial)}</td>
+        <td style="font-weight:500">${fmt(a.saldo_pendiente)}</td>
+        <td><div style="font-size:12px">${a.fecha_vencimiento}</div><div style="font-size:11px;color:${diasColor}">${diasTxt}</div></td>
+        <td>${badge}</td>
+        <td style="white-space:nowrap">${acciones}</td>
+      </tr>`;
+    }).join('');
+  },
+  badge(estado){
+    const m={activo:{cls:'badge-ok',txt:'Activo'},vencido:{cls:'badge-warn',txt:'Vencido'},completado:{cls:'badge-info',txt:'Completado'},cancelado:{cls:'badge-gray',txt:'Cancelado'}};
+    const c=m[estado]||m.activo;
+    return`<span class="badge ${c.cls}">${c.txt}</span>`;
+  },
+  abrirNuevo(){
+    itemsForm=[];
+    ['ap-cliente','ap-notas','ap-abono'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+    document.getElementById('ap-resumen').style.display='none';
+    document.getElementById('ap-err').style.display='none';
+    this.addItem();
+    showModal('modal-nuevo');
+  },
+  addItem(){
+    const id=Date.now();
+    itemsForm.push({id});
+    this.renderItems();
+  },
+  quitarItem(id){itemsForm=itemsForm.filter(i=>i.id!==id);this.renderItems();this.calcular()},
+  renderItems(){
+    document.getElementById('ap-items').innerHTML=itemsForm.map(item=>`
+      <div style="display:grid;grid-template-columns:1fr 70px auto;gap:8px;align-items:center;margin-bottom:8px">
+        <select class="tc-select" id="prod-${item.id}" onchange="AP.calcular()">
+          <option value="">Seleccionar producto...</option>
+          ${prods.map(p=>`<option value="${p.id}" data-precio="${p.precio_venta}">${p.nombre} — ${fmt(p.precio_venta)} (stock:${p.stock})</option>`).join('')}
+        </select>
+        <input type="number" class="tc-input" id="cant-${item.id}" value="1" min="1" style="text-align:center" oninput="AP.calcular()">
+        <button onclick="AP.quitarItem(${item.id})" style="padding:7px 10px;border:0.5px solid var(--border);border-radius:var(--r);background:none;color:var(--danger);cursor:pointer">✕</button>
+      </div>`).join('');
+  },
+  calcular(){
+    let total=0;
+    for(const item of itemsForm){
+      const sel=document.getElementById('prod-'+item.id);
+      const cant=parseInt(document.getElementById('cant-'+item.id)?.value)||0;
+      const precio=parseFloat(sel?.selectedOptions[0]?.dataset.precio)||0;
+      total+=precio*cant;
+    }
+    const abono=parseInt(document.getElementById('ap-abono').value)||0;
+    if(total>0){
+      document.getElementById('ap-resumen').style.display='flex';
+      document.getElementById('ap-total-calc').textContent=fmt(total);
+      document.getElementById('ap-saldo-calc').textContent=fmt(Math.max(0,total-abono));
+    }else{document.getElementById('ap-resumen').style.display='none'}
+  },
+  async guardar(){
+    const err=document.getElementById('ap-err');
+    err.style.display='none';
+    const cliente_id=parseInt(document.getElementById('ap-cliente').value);
+    const abono_inicial=parseInt(document.getElementById('ap-abono').value)||0;
+    const items=itemsForm.map(item=>{
+      const sel=document.getElementById('prod-'+item.id);
+      const cant=parseInt(document.getElementById('cant-'+item.id)?.value)||0;
+      const precio=parseFloat(sel?.selectedOptions[0]?.dataset.precio)||0;
+      return{producto_id:parseInt(sel?.value),cantidad:cant,precio_unitario:precio};
+    }).filter(i=>i.producto_id&&i.cantidad>0);
+    const total=items.reduce((s,i)=>s+i.precio_unitario*i.cantidad,0);
+    if(!cliente_id){err.textContent='Selecciona un cliente.';err.style.display='flex';return}
+    if(!items.length){err.textContent='Agrega al menos un producto.';err.style.display='flex';return}
+    if(abono_inicial<20000){err.textContent='El abono mínimo es $ 20.000.';err.style.display='flex';return}
+    const r=await api('/apartados',{method:'POST',body:JSON.stringify({
+      cliente_id,items,total_apartado:total,abono_inicial,
+      metodo_pago:document.getElementById('ap-metodo').value,
+      notas:document.getElementById('ap-notas').value
+    })});
+    if(r?.ok){hideModal('modal-nuevo');toast(r.mensaje);this.cargarApartados(filtroActual)}
+    else{err.textContent=r?.mensaje||'Error al crear.';err.style.display='flex'}
+  },
+  abrirPago(id,saldo){
+    apPagoId=id;apPagoSaldo=saldo;
+    document.getElementById('pago-id').textContent='#'+id;
+    document.getElementById('pago-saldo').textContent=fmt(saldo);
+    document.getElementById('pago-monto').value='';
+    document.getElementById('pago-err').style.display='none';
+    showModal('modal-pago');
+  },
+  async confirmarPago(){
+    const err=document.getElementById('pago-err');
+    err.style.display='none';
+    const monto=parseInt(document.getElementById('pago-monto').value)||0;
+    if(monto<=0){err.textContent='Monto inválido.';err.style.display='flex';return}
+    if(monto>apPagoSaldo){err.textContent=`Monto supera el saldo (${fmt(apPagoSaldo)}).`;err.style.display='flex';return}
+    const r=await api(`/apartados/${apPagoId}/pago`,{method:'POST',body:JSON.stringify({monto,metodo_pago:document.getElementById('pago-metodo').value})});
+    if(r?.ok){hideModal('modal-pago');toast(r.mensaje);this.cargarApartados(filtroActual)}
+    else{err.textContent=r?.mensaje||'Error.';err.style.display='flex'}
+  },
+  async cancelar(id){
+    if(!confirm(`¿Cancelar apartado #${id}? Esta acción no se puede deshacer.`))return;
+    const r=await api(`/apartados/${id}/cancelar`,{method:'PUT'});
+    if(r?.ok){toast(r.mensaje);this.cargarApartados(filtroActual)}
+    else toast(r?.mensaje||'Error','err');
+  },
+  async verDetalle(id){
+    document.getElementById('det-titulo').textContent='Apartado #'+id;
+    document.getElementById('det-body').innerHTML='<p class="tc-empty">Cargando...</p>';
+    showModal('modal-detalle');
+    const r=await api('/apartados/'+id);
+    if(!r?.ok){document.getElementById('det-body').innerHTML='<p class="tc-empty">Error al cargar.</p>';return}
+    const a=r.apartado;
+    document.getElementById('det-body').innerHTML=`
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <div><div style="font-size:11px;color:var(--txt3)">Cliente</div><div style="font-weight:500">${a.cliente_nombre}</div><div style="font-size:12px;color:var(--txt2)">${a.cliente_telefono||''}</div></div>
+        <div><div style="font-size:11px;color:var(--txt3)">Estado</div>${this.badge(a.estado)}</div>
+        <div><div style="font-size:11px;color:var(--txt3)">Inicio</div><div>${a.fecha_inicio}</div></div>
+        <div><div style="font-size:11px;color:var(--txt3)">Vencimiento</div><div style="color:${a.dias_restantes<0?'var(--danger)':'var(--txt)'}">${a.fecha_vencimiento}</div></div>
+        <div><div style="font-size:11px;color:var(--txt3)">Total apartado</div><div style="font-weight:500">${fmt(a.total_apartado)}</div></div>
+        <div><div style="font-size:11px;color:var(--txt3)">Saldo pendiente</div><div style="font-weight:600;color:${a.saldo_pendiente>0?'var(--danger)':'var(--success)'}">${fmt(a.saldo_pendiente)}</div></div>
+      </div>
+      <div style="font-size:12px;font-weight:500;color:var(--txt);margin-bottom:6px">Productos apartados</div>
+      <table class="tc-table" style="margin-bottom:14px">
+        <thead><tr><th>Producto</th><th>Cant</th><th>Precio</th><th>Subtotal</th></tr></thead>
+        <tbody>${a.items.map(i=>`<tr><td>${i.nombre}${i.talla?' <span style="color:var(--txt3)">'+i.talla+'</span>':''}</td><td>${i.cantidad}</td><td>${fmt(i.precio_unitario)}</td><td>${fmt(i.precio_unitario*i.cantidad)}</td></tr>`).join('')}</tbody>
+      </table>
+      <div style="font-size:12px;font-weight:500;color:var(--txt);margin-bottom:6px">Historial de pagos</div>
+      ${a.pagos.map(p=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid var(--border);font-size:12px">
+        <span>${new Date(p.fecha_pago).toLocaleDateString('es-CO')} · ${p.metodo_pago} · ${p.registrado_por}</span>
+        <span style="font-weight:600;color:var(--success)">${fmt(p.monto)}</span>
+      </div>`).join('')||'<p style="font-size:12px;color:var(--txt3)">Sin pagos registrados</p>'}`;
+  }
+};
+AP.init();
+</script>
+</body>
+</html>

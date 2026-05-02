@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inventario — Tejidos Castañeda</title>
+<link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<nav class="tc-nav">
+  <div class="tc-nav-brand"><img id="nav-logo" src="/img/logo.svg" alt="Logo"><span id="nav-biz">Tejidos Castañeda</span></div>
+  <div class="tc-nav-right">
+    <span id="nav-empleado" class="tc-nav-user"></span>
+    <span id="nav-rol" class="tc-nav-rol"></span>
+    <a href="/dashboard.html" class="tc-nav-link">Dashboard</a>
+    <a href="/pos.html" class="tc-nav-link">POS</a>
+    <button onclick="cerrarSesion()" class="tc-btn-logout">Salir</button>
+  </div>
+</nav>
+
+<div class="tc-wrap">
+  <div class="tc-page-header">
+    <div><h1 class="tc-page-title">Inventario</h1><p class="tc-page-sub">Control de stock, entradas y alertas</p></div>
+    <div class="tc-actions" id="admin-actions" style="display:none">
+      <button class="btn-secondary" onclick="INV.abrirImportar()">Importar Excel</button>
+      <button class="btn-primary" onclick="INV.abrirProducto()">+ Nuevo producto</button>
+    </div>
+  </div>
+
+  <div class="tc-metrics" id="metrics" style="grid-template-columns:repeat(6,minmax(0,1fr))">
+    <div class="tc-metric"><div class="tc-metric-lbl">Productos</div><div class="tc-metric-val" id="m-total">—</div></div>
+    <div class="tc-metric"><div class="tc-metric-lbl">Unidades</div><div class="tc-metric-val tc-green" id="m-units">—</div></div>
+    <div class="tc-metric"><div class="tc-metric-lbl">Stock bajo</div><div class="tc-metric-val tc-yellow" id="m-bajo">—</div></div>
+    <div class="tc-metric"><div class="tc-metric-lbl">Agotados</div><div class="tc-metric-val tc-red" id="m-agot">—</div></div>
+    <div class="tc-metric"><div class="tc-metric-lbl">Valor costo</div><div class="tc-metric-val" id="m-costo" style="font-size:14px">—</div></div>
+    <div class="tc-metric"><div class="tc-metric-lbl">Valor venta</div><div class="tc-metric-val tc-green" id="m-venta" style="font-size:14px">—</div></div>
+  </div>
+
+  <div class="tc-filters">
+    <input type="search" id="buscar-inv" class="tc-input" placeholder="Buscar producto..." oninput="INV.filtrar()" style="max-width:240px">
+    <select id="filtro-estado" class="tc-select" style="max-width:150px" onchange="INV.filtrar()">
+      <option value="">Todos los estados</option>
+      <option value="ok">En stock</option>
+      <option value="bajo">Stock bajo</option>
+      <option value="agotado">Agotados</option>
+    </select>
+    <select id="filtro-cat" class="tc-select" style="max-width:170px" onchange="INV.filtrar()">
+      <option value="">Todas las categorías</option>
+    </select>
+  </div>
+
+  <div class="tc-table-wrap">
+    <table class="tc-table">
+      <thead><tr><th>Producto</th><th>Categoría</th><th>Talla/Color</th><th>Precio venta</th><th style="text-align:center">Stock</th><th style="text-align:center">Mínimo</th><th>Nivel</th><th>Estado</th><th id="col-acc">Acciones</th></tr></thead>
+      <tbody id="inv-tbody"><tr><td colspan="9" class="tc-empty">Cargando...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL PRODUCTO -->
+<div class="tc-overlay" id="modal-prod" style="display:none">
+  <div class="tc-modal">
+    <div class="tc-modal-hdr"><h3 id="prod-titulo">Nuevo producto</h3><button class="tc-modal-close" onclick="hideModal('modal-prod')">×</button></div>
+    <div class="tc-modal-body">
+      <input type="hidden" id="prod-id">
+      <div class="tc-form-row">
+        <div class="tc-form-group"><label class="tc-label">Nombre *</label><input type="text" id="prod-nombre" class="tc-input" placeholder="Nombre del producto"></div>
+        <div class="tc-form-group"><label class="tc-label">Referencia</label><input type="text" id="prod-ref" class="tc-input" placeholder="REF-001"></div>
+      </div>
+      <div class="tc-form-row">
+        <div class="tc-form-group"><label class="tc-label">Categoría</label><input type="text" id="prod-cat" class="tc-input" placeholder="Camisas, Vestidos..."></div>
+        <div class="tc-form-group"><label class="tc-label">Talla</label><input type="text" id="prod-talla" class="tc-input" placeholder="S, M, L..."></div>
+      </div>
+      <div class="tc-form-row">
+        <div class="tc-form-group"><label class="tc-label">Color</label><input type="text" id="prod-color" class="tc-input" placeholder="Negro, Blanco..."></div>
+        <div class="tc-form-group"><label class="tc-label">Proveedor</label><select id="prod-prov" class="tc-select"><option value="">Sin proveedor</option></select></div>
+      </div>
+      <div class="tc-form-row">
+        <div class="tc-form-group"><label class="tc-label">Precio compra</label><input type="number" id="prod-pc" class="tc-input" placeholder="0" min="0"></div>
+        <div class="tc-form-group"><label class="tc-label">Precio venta *</label><input type="number" id="prod-pv" class="tc-input" placeholder="0" min="0"></div>
+      </div>
+      <div class="tc-form-row">
+        <div class="tc-form-group"><label class="tc-label">Stock inicial</label><input type="number" id="prod-stock" class="tc-input" placeholder="0" min="0"></div>
+        <div class="tc-form-group"><label class="tc-label">Stock mínimo</label><input type="number" id="prod-smin" class="tc-input" placeholder="5" min="0"></div>
+      </div>
+      <div id="prod-err" class="tc-alert tc-alert-err" style="display:none"></div>
+    </div>
+    <div class="tc-modal-footer">
+      <button class="btn-secondary" onclick="hideModal('modal-prod')">Cancelar</button>
+      <button class="btn-primary" onclick="INV.guardarProducto()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ENTRADA -->
+<div class="tc-overlay" id="modal-entrada" style="display:none">
+  <div class="tc-modal" style="max-width:400px">
+    <div class="tc-modal-hdr"><h3>Entrada de stock</h3><button class="tc-modal-close" onclick="hideModal('modal-entrada')">×</button></div>
+    <div class="tc-modal-body">
+      <p id="entrada-prod" style="font-size:13px;color:var(--txt2);margin-bottom:14px"></p>
+      <div class="tc-form-group"><label class="tc-label">Cantidad *</label><input type="number" id="entrada-cant" class="tc-input" placeholder="0" min="1"></div>
+      <div id="entrada-err" class="tc-alert tc-alert-err" style="display:none"></div>
+    </div>
+    <div class="tc-modal-footer">
+      <button class="btn-secondary" onclick="hideModal('modal-entrada')">Cancelar</button>
+      <button class="btn-primary" onclick="INV.confirmarEntrada()">Registrar entrada</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AJUSTE -->
+<div class="tc-overlay" id="modal-ajuste" style="display:none">
+  <div class="tc-modal" style="max-width:400px">
+    <div class="tc-modal-hdr"><h3>Ajuste de stock</h3><button class="tc-modal-close" onclick="hideModal('modal-ajuste')">×</button></div>
+    <div class="tc-modal-body">
+      <p id="ajuste-prod" style="font-size:13px;color:var(--txt2);margin-bottom:4px"></p>
+      <p id="ajuste-actual" style="font-size:12px;color:var(--txt3);margin-bottom:14px"></p>
+      <div class="tc-form-group"><label class="tc-label">Nuevo stock *</label><input type="number" id="ajuste-stock" class="tc-input" min="0"></div>
+      <div class="tc-form-group"><label class="tc-label">Motivo</label><input type="text" id="ajuste-motivo" class="tc-input" placeholder="Conteo físico, merma..."></div>
+      <div id="ajuste-err" class="tc-alert tc-alert-err" style="display:none"></div>
+    </div>
+    <div class="tc-modal-footer">
+      <button class="btn-secondary" onclick="hideModal('modal-ajuste')">Cancelar</button>
+      <button class="btn-primary" onclick="INV.confirmarAjuste()">Aplicar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL IMPORTAR -->
+<div class="tc-overlay" id="modal-importar" style="display:none">
+  <div class="tc-modal" style="max-width:440px">
+    <div class="tc-modal-hdr"><h3>Importar desde Excel</h3><button class="tc-modal-close" onclick="hideModal('modal-importar')">×</button></div>
+    <div class="tc-modal-body">
+      <p style="font-size:13px;color:var(--txt2);margin-bottom:14px">El archivo .xlsx debe tener una hoja <strong>Productos</strong> con columnas: Nombre, Precio venta, Precio compra, Stock actual, Stock mínimo, Categoría, Talla, Color, Referencia.</p>
+      <input type="file" id="inp-excel" accept=".xlsx,.xls" class="tc-input" style="padding:6px">
+      <div id="importar-res" style="margin-top:10px;font-size:13px"></div>
+    </div>
+    <div class="tc-modal-footer">
+      <button class="btn-secondary" onclick="hideModal('modal-importar')">Cancelar</button>
+      <button class="btn-primary" onclick="INV.confirmarImportar()">Importar</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script>
+proteger();
+const u=getUsuario();
+let todosProds=[], entradaProdId=null, ajusteProdId=null;
+
+if(tieneRol('admin')){
+  document.getElementById('admin-actions').style.display='flex';
+}else{
+  document.getElementById('col-acc').style.display='none';
+}
+
+const INV={
+  async init(){
+    await Promise.all([this.cargarResumen(), this.cargarProductos(), this.cargarProveedores()]);
+  },
+  async cargarResumen(){
+    const r=await api('/inventario/resumen');
+    if(!r?.ok)return;
+    const s=r.resumen;
+    document.getElementById('m-total').textContent=s.total_productos;
+    document.getElementById('m-units').textContent=s.total_unidades;
+    document.getElementById('m-bajo').textContent=s.stock_bajo;
+    document.getElementById('m-agot').textContent=s.agotados;
+    document.getElementById('m-costo').textContent=fmt(s.valor_costo);
+    document.getElementById('m-venta').textContent=fmt(s.valor_venta);
+  },
+  async cargarProductos(){
+    const r=await api('/productos');
+    if(!r?.ok)return;
+    todosProds=r.productos;
+    const cats=[...new Set(r.productos.map(p=>p.categoria).filter(Boolean))];
+    const sel=document.getElementById('filtro-cat');
+    sel.innerHTML='<option value="">Todas las categorías</option>';
+    cats.forEach(c=>{const o=document.createElement('option');o.value=o.textContent=c;sel.appendChild(o)});
+    this.renderTabla(todosProds);
+  },
+  async cargarProveedores(){
+    const r=await api('/proveedores');
+    if(!r?.ok)return;
+    const sel=document.getElementById('prod-prov');
+    r.proveedores.forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=p.nombre;sel.appendChild(o)});
+  },
+  getEstado(p){if(p.stock===0)return'agotado';if(p.stock<=p.stock_minimo)return'bajo';return'ok'},
+  filtrar(){
+    const q=document.getElementById('buscar-inv').value.toLowerCase();
+    const estado=document.getElementById('filtro-estado').value;
+    const cat=document.getElementById('filtro-cat').value;
+    const f=todosProds.filter(p=>{
+      const est=this.getEstado(p);
+      return(!q||p.nombre.toLowerCase().includes(q)||(p.referencia||'').toLowerCase().includes(q))
+        &&(!estado||est===estado)&&(!cat||p.categoria===cat);
+    });
+    this.renderTabla(f);
+  },
+  renderTabla(lista){
+    const tbody=document.getElementById('inv-tbody');
+    const isAdmin=tieneRol('admin');
+    if(!lista.length){tbody.innerHTML='<tr><td colspan="9" class="tc-empty">Sin productos</td></tr>';return}
+    tbody.innerHTML=lista.map(p=>{
+      const est=this.getEstado(p);
+      const barColor={ok:'var(--success)',bajo:'var(--warning)',agotado:'var(--danger)'}[est];
+      const pct=Math.min(100,Math.round(p.stock/Math.max(p.stock_minimo*2,1)*100));
+      const badge={ok:'<span class="badge badge-ok">OK</span>',bajo:'<span class="badge badge-warn">Stock bajo</span>',agotado:'<span class="badge badge-red">Agotado</span>'}[est];
+      const accs=isAdmin?`<button class="btn-sm" onclick="INV.abrirProducto(${JSON.stringify(JSON.stringify(p))})">Editar</button>
+        <button class="btn-sm" onclick="INV.abrirEntrada(${p.id},'${p.nombre.replace(/'/g,"\\'")}')">Entrada</button>
+        <button class="btn-sm" onclick="INV.abrirAjuste(${p.id},'${p.nombre.replace(/'/g,"\\'")}',${p.stock})">Ajustar</button>`:'';
+      return`<tr>
+        <td><div style="font-weight:500">${p.nombre}</div>${p.referencia?`<div style="font-size:11px;color:var(--txt3)">${p.referencia}</div>`:''}</td>
+        <td style="color:var(--txt2)">${p.categoria||'—'}</td>
+        <td style="color:var(--txt3)">${[p.talla,p.color].filter(Boolean).join(' / ')||'—'}</td>
+        <td>${fmt(p.precio_venta)}</td>
+        <td style="text-align:center;font-weight:600;color:${barColor}">${p.stock}</td>
+        <td style="text-align:center;color:var(--txt3)">${p.stock_minimo}</td>
+        <td style="min-width:80px"><div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${barColor}"></div></div></td>
+        <td>${badge}</td>
+        <td style="white-space:nowrap">${accs}</td>
+      </tr>`;
+    }).join('');
+  },
+  abrirProducto(jsonStr=null){
+    const p=jsonStr?JSON.parse(jsonStr):null;
+    document.getElementById('prod-titulo').textContent=p?'Editar producto':'Nuevo producto';
+    document.getElementById('prod-id').value=p?.id||'';
+    document.getElementById('prod-nombre').value=p?.nombre||'';
+    document.getElementById('prod-ref').value=p?.referencia||'';
+    document.getElementById('prod-cat').value=p?.categoria||'';
+    document.getElementById('prod-talla').value=p?.talla||'';
+    document.getElementById('prod-color').value=p?.color||'';
+    document.getElementById('prod-pc').value=p?.precio_compra||'';
+    document.getElementById('prod-pv').value=p?.precio_venta||'';
+    document.getElementById('prod-stock').value=p?.stock??0;
+    document.getElementById('prod-smin').value=p?.stock_minimo??5;
+    document.getElementById('prod-prov').value=p?.proveedor_id||'';
+    document.getElementById('prod-err').style.display='none';
+    showModal('modal-prod');
+  },
+  async guardarProducto(){
+    const err=document.getElementById('prod-err');err.style.display='none';
+    const id=document.getElementById('prod-id').value;
+    const datos={nombre:document.getElementById('prod-nombre').value.trim(),referencia:document.getElementById('prod-ref').value.trim()||undefined,
+      categoria:document.getElementById('prod-cat').value.trim()||undefined,talla:document.getElementById('prod-talla').value.trim()||undefined,
+      color:document.getElementById('prod-color').value.trim()||undefined,precio_compra:Number(document.getElementById('prod-pc').value)||0,
+      precio_venta:Number(document.getElementById('prod-pv').value),stock:parseInt(document.getElementById('prod-stock').value)||0,
+      stock_minimo:parseInt(document.getElementById('prod-smin').value)||5,proveedor_id:document.getElementById('prod-prov').value||undefined};
+    if(!datos.nombre){err.textContent='Nombre requerido.';err.style.display='flex';return}
+    if(!datos.precio_venta){err.textContent='Precio de venta requerido.';err.style.display='flex';return}
+    const r=await api(id?`/productos/${id}`:'/productos',{method:id?'PUT':'POST',body:JSON.stringify(datos)});
+    if(r?.ok){hideModal('modal-prod');toast('Producto guardado.');this.init()}
+    else{err.textContent=r?.mensaje||'Error.';err.style.display='flex'}
+  },
+  abrirEntrada(id,nombre){
+    entradaProdId=id;
+    document.getElementById('entrada-prod').textContent='Producto: '+nombre;
+    document.getElementById('entrada-cant').value='';
+    document.getElementById('entrada-err').style.display='none';
+    showModal('modal-entrada');
+  },
+  async confirmarEntrada(){
+    const err=document.getElementById('entrada-err');err.style.display='none';
+    const cant=parseInt(document.getElementById('entrada-cant').value)||0;
+    if(cant<=0){err.textContent='Cantidad inválida.';err.style.display='flex';return}
+    const r=await api(`/productos/${entradaProdId}/entrada`,{method:'POST',body:JSON.stringify({cantidad:cant})});
+    if(r?.ok){hideModal('modal-entrada');toast(r.mensaje);this.init()}
+    else{err.textContent=r?.mensaje||'Error.';err.style.display='flex'}
+  },
+  abrirAjuste(id,nombre,stock){
+    ajusteProdId=id;
+    document.getElementById('ajuste-prod').textContent='Producto: '+nombre;
+    document.getElementById('ajuste-actual').textContent='Stock actual: '+stock;
+    document.getElementById('ajuste-stock').value=stock;
+    document.getElementById('ajuste-motivo').value='';
+    document.getElementById('ajuste-err').style.display='none';
+    showModal('modal-ajuste');
+  },
+  async confirmarAjuste(){
+    const err=document.getElementById('ajuste-err');err.style.display='none';
+    const ns=parseInt(document.getElementById('ajuste-stock').value);
+    if(isNaN(ns)||ns<0){err.textContent='Stock inválido.';err.style.display='flex';return}
+    const r=await api('/inventario/ajuste',{method:'POST',body:JSON.stringify({producto_id:ajusteProdId,nuevo_stock:ns,motivo:document.getElementById('ajuste-motivo').value})});
+    if(r?.ok){hideModal('modal-ajuste');toast(r.mensaje);this.init()}
+    else{err.textContent=r?.mensaje||'Error.';err.style.display='flex'}
+  },
+  abrirImportar(){document.getElementById('inp-excel').value='';document.getElementById('importar-res').textContent='';showModal('modal-importar')},
+  async confirmarImportar(){
+    const file=document.getElementById('inp-excel').files[0];
+    const res=document.getElementById('importar-res');
+    if(!file){res.textContent='Selecciona un archivo.';return}
+    const fd=new FormData();fd.append('archivo',file);
+    const token=getToken();
+    const r=await fetch('/api/excel/importar-productos',{method:'POST',headers:{'Authorization':'Bearer '+token},body:fd}).then(x=>x.json());
+    if(r?.ok){res.style.color='var(--success)';res.textContent=`Importados: ${r.importados}. Errores: ${r.errores?.length||0}.`;this.init()}
+    else{res.style.color='var(--danger)';res.textContent=r?.mensaje||'Error.'}
+  }
+};
+INV.init();
+</script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contabilidad — Tejidos Castañeda</title>
+<link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<nav class="tc-nav">
+  <div class="tc-nav-brand"><img id="nav-logo" src="/img/logo.svg" alt="Logo"><span id="nav-biz">Tejidos Castañeda</span></div>
+  <div class="tc-nav-right">
+    <span id="nav-empleado" class="tc-nav-user"></span>
+    <span id="nav-rol" class="tc-nav-rol"></span>
+    <a href="/dashboard.html" class="tc-nav-link">Dashboard</a>
+    <button onclick="cerrarSesion()" class="tc-btn-logout">Salir</button>
+  </div>
+</nav>
+
+<div class="tc-wrap">
+  <div class="tc-page-header">
+    <div><h1 class="tc-page-title">Contabilidad</h1><p class="tc-page-sub">Balance general, ingresos y egresos</p></div>
+    <div class="tc-actions">
+      <button class="btn-secondary" onclick="CONT.registrarGasto()">+ Registrar gasto</button>
+    </div>
+  </div>
+
+  <div class="tc-card" style="margin-bottom:18px">
+    <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
+      <div><label class="tc-label">Desde</label><input type="date" id="f-desde" class="tc-input" style="width:160px"></div>
+      <div><label class="tc-label">Hasta</label><input type="date" id="f-hasta" class="tc-input" style="width:160px"></div>
+      <button class="btn-primary" onclick="CONT.cargar()">Aplicar</button>
+      <button class="btn-secondary" onclick="CONT.esteMes()">Este mes</button>
+    </div>
+  </div>
+
+  <div class="tc-metrics" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:20px">
+    <div class="tc-metric"><div class="tc-metric-lbl">Total ingresos</div><div class="tc-metric-val tc-green" id="m-ing">—</div></div>
+    <div class="tc-metric"><div class="tc-metric-lbl">Total egresos</div><div class="tc-metric-val tc-red" id="m-egr">—</div></div>
+    <div class="tc-metric"><div class="tc-metric-lbl">Utilidad neta</div><div class="tc-metric-val" id="m-util">—</div></div>
+    <div class="tc-metric"><div class="tc-metric-lbl">Margen</div><div class="tc-metric-val tc-green" id="m-margen">—</div></div>
+  </div>
+
+  <!-- Ventas por método de pago -->
+  <div class="tc-card" style="margin-bottom:18px">
+    <div class="tc-card-title">Ventas por método de pago</div>
+    <div id="metodos-wrap" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px">
+      <p class="tc-empty">Cargando...</p>
+    </div>
+  </div>
+
+  <!-- Top productos -->
+  <div class="tc-card" style="margin-bottom:18px">
+    <div class="tc-card-title">Productos más vendidos</div>
+    <table class="tc-table" id="tabla-top">
+      <thead><tr><th>#</th><th>Producto</th><th>Categoría</th><th style="text-align:right">Unidades</th><th style="text-align:right">Total</th></tr></thead>
+      <tbody id="top-body"><tr><td colspan="5" class="tc-empty">Cargando...</td></tr></tbody>
+    </table>
+  </div>
+
+  <!-- Movimientos -->
+  <div class="tc-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <div class="tc-card-title" style="margin:0">Movimientos contables</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <select id="filtro-tipo" class="tc-select" style="width:140px" onchange="CONT.cargarMovimientos()">
+          <option value="">Todos</option>
+          <option value="ingreso">Ingresos</option>
+          <option value="egreso">Egresos</option>
+        </select>
+      </div>
+    </div>
+    <div class="tc-table-wrap" style="margin-bottom:10px">
+      <table class="tc-table">
+        <thead><tr><th>Fecha</th><th>Tipo</th><th>Concepto</th><th style="text-align:right">Monto</th><th>Empleado</th></tr></thead>
+        <tbody id="movs-body"><tr><td colspan="5" class="tc-empty">Cargando...</td></tr></tbody>
+      </table>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span id="movs-info" style="font-size:12px;color:var(--txt3)"></span>
+      <div style="display:flex;gap:8px">
+        <button class="btn-secondary" id="btn-prev" onclick="CONT.paginar(-1)">← Anterior</button>
+        <button class="btn-secondary" id="btn-next" onclick="CONT.paginar(1)">Siguiente →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL GASTO -->
+<div class="tc-overlay" id="modal-gasto" style="display:none">
+  <div class="tc-modal" style="max-width:400px">
+    <div class="tc-modal-hdr"><h3>Registrar gasto</h3><button class="tc-modal-close" onclick="hideModal('modal-gasto')">×</button></div>
+    <div class="tc-modal-body">
+      <div class="tc-form-group"><label class="tc-label">Concepto *</label><input type="text" id="g-concepto" class="tc-input" placeholder="Arriendo, servicios, transporte..."></div>
+      <div class="tc-form-group"><label class="tc-label">Monto *</label><input type="number" id="g-monto" class="tc-input" placeholder="0" min="1"></div>
+      <div class="tc-form-group"><label class="tc-label">Fecha</label><input type="date" id="g-fecha" class="tc-input"></div>
+      <div id="g-err" class="tc-alert tc-alert-err" style="display:none"></div>
+    </div>
+    <div class="tc-modal-footer">
+      <button class="btn-secondary" onclick="hideModal('modal-gasto')">Cancelar</button>
+      <button class="btn-primary" onclick="CONT.confirmarGasto()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script>
+proteger('admin','propietario');
+let pagina=1;const LIMITE=20;
+
+function getFechas(){return{desde:document.getElementById('f-desde').value,hasta:document.getElementById('f-hasta').value}}
+
+const CONT={
+  init(){
+    this.esteMes();
+  },
+  esteMes(){
+    const hoy=new Date(),inicio=new Date(hoy.getFullYear(),hoy.getMonth(),1);
+    document.getElementById('f-desde').value=inicio.toISOString().slice(0,10);
+    document.getElementById('f-hasta').value=hoy.toISOString().slice(0,10);
+    this.cargar();
+  },
+  async cargar(){
+    pagina=1;
+    await Promise.all([this.cargarBalance(),this.cargarMovimientos(),this.cargarTop()]);
+  },
+  async cargarBalance(){
+    const {desde,hasta}=getFechas();
+    const r=await api(`/contabilidad/balance?desde=${desde}&hasta=${hasta}`);
+    if(!r?.ok)return;
+    const b=r.balance;
+    document.getElementById('m-ing').textContent=fmt(b.total_ingresos);
+    document.getElementById('m-egr').textContent=fmt(b.total_egresos);
+    document.getElementById('m-util').textContent=fmt(b.utilidad_neta);
+    document.getElementById('m-util').className='tc-metric-val '+(b.utilidad_neta>=0?'tc-green':'tc-red');
+    document.getElementById('m-margen').textContent=b.margen_pct+'%';
+    // Métodos de pago
+    document.getElementById('metodos-wrap').innerHTML=b.por_metodo.length?b.por_metodo.map(m=>`
+      <div class="tc-metric">
+        <div class="tc-metric-lbl" style="text-transform:capitalize">${m.metodo_pago}</div>
+        <div class="tc-metric-val tc-green" style="font-size:15px">${fmt(m.total)}</div>
+        <div class="tc-metric-sub">${m.num_ventas} venta(s)${m.recargos>0?' · +'+fmt(m.recargos)+' recargo':''}</div>
+      </div>`).join(''):'<p class="tc-empty">Sin ventas en el período</p>';
+  },
+  async cargarMovimientos(){
+    const {desde,hasta}=getFechas();
+    const tipo=document.getElementById('filtro-tipo').value;
+    const offset=(pagina-1)*LIMITE;
+    const r=await api(`/contabilidad/movimientos?desde=${desde}&hasta=${hasta}&limite=${LIMITE}&pagina=${pagina}${tipo?'&tipo='+tipo:''}`);
+    if(!r?.ok)return;
+    const tbody=document.getElementById('movs-body');
+    if(!r.movimientos.length){tbody.innerHTML='<tr><td colspan="5" class="tc-empty">Sin movimientos</td></tr>';return}
+    tbody.innerHTML=r.movimientos.map(m=>{
+      const color=m.tipo==='ingreso'?'var(--success)':'var(--danger)';
+      const sig=m.tipo==='ingreso'?'+':'-';
+      const badge=m.tipo==='ingreso'?'<span class="badge badge-ok">Ingreso</span>':'<span class="badge badge-red">Egreso</span>';
+      return`<tr>
+        <td style="color:var(--txt3)">${new Date(m.fecha).toLocaleDateString('es-CO')}</td>
+        <td>${badge}</td>
+        <td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${m.concepto}">${m.concepto}</td>
+        <td style="text-align:right;font-weight:600;color:${color}">${sig} ${fmt(m.monto)}</td>
+        <td style="color:var(--txt3)">${m.empleado||'—'}</td>
+      </tr>`;
+    }).join('');
+    const totalPags=Math.ceil(r.total/LIMITE);
+    document.getElementById('movs-info').textContent=`Página ${pagina} de ${totalPags} · ${r.total} registros`;
+    document.getElementById('btn-prev').disabled=pagina<=1;
+    document.getElementById('btn-next').disabled=pagina>=totalPags;
+  },
+  paginar(delta){pagina=Math.max(1,pagina+delta);this.cargarMovimientos()},
+  async cargarTop(){
+    const {desde,hasta}=getFechas();
+    const r=await api(`/contabilidad/top-productos?desde=${desde}&hasta=${hasta}&limite=8`);
+    if(!r?.ok)return;
+    document.getElementById('top-body').innerHTML=r.productos.length?r.productos.map((p,i)=>`<tr>
+      <td style="color:var(--txt3);font-weight:500">${i+1}</td>
+      <td style="font-weight:500">${p.nombre}</td>
+      <td style="color:var(--txt2)">${p.categoria||'—'}</td>
+      <td style="text-align:right;font-weight:500">${p.unidades_vendidas}</td>
+      <td style="text-align:right;color:var(--success);font-weight:500">${fmt(p.total_vendido)}</td>
+    </tr>`).join(''):'<tr><td colspan="5" class="tc-empty">Sin ventas en el período</td></tr>';
+  },
+  registrarGasto(){
+    document.getElementById('g-concepto').value='';
+    document.getElementById('g-monto').value='';
+    document.getElementById('g-fecha').value=new Date().toISOString().slice(0,10);
+    document.getElementById('g-err').style.display='none';
+    showModal('modal-gasto');
+  },
+  async confirmarGasto(){
+    const err=document.getElementById('g-err');err.style.display='none';
+    const concepto=document.getElementById('g-concepto').value.trim();
+    const monto=Number(document.getElementById('g-monto').value);
+    const fecha=document.getElementById('g-fecha').value;
+    if(!concepto){err.textContent='Concepto requerido.';err.style.display='flex';return}
+    if(!monto||monto<=0){err.textContent='Monto inválido.';err.style.display='flex';return}
+    const r=await api('/contabilidad/gasto',{method:'POST',body:JSON.stringify({concepto,monto,fecha})});
+    if(r?.ok){hideModal('modal-gasto');toast('Gasto registrado.');this.cargar()}
+    else{err.textContent=r?.mensaje||'Error.';err.style.display='flex'}
+  }
+};
+CONT.init();
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "tejidos-castaneda",
+  "version": "1.0.0",
+  "description": "Sistema POS Tejidos Castañeda - Ventas, Inventario, Apartados y Contabilidad",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev":   "node backend/server.js",
+    "http":  "PORT=3000 node backend/server.js",
+    "setup": "bash setup.sh"
+  },
+  "keywords": ["pos","ventas","inventario","apartados"],
+  "dependencies": {
+    "bcrypt":         "^5.1.1",
+    "better-sqlite3": "^9.4.3",
+    "cors":           "^2.8.5",
+    "express":        "^4.18.3",
+    "jsonwebtoken":   "^9.0.2",
+    "multer":         "^1.4.5-lts.1",
+    "xlsx":           "^0.18.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
