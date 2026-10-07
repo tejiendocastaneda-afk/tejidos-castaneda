@@ -1,75 +1,175 @@
 /* ============================================================
-   TEJIDOS CASTAÑEDA — script.js  (edición Navidad 2026)
-   ------------------------------------------------------------
-   PRODUCTOS_BASE: aquí están todos los productos y sus precios.
-   Para cambiar un precio busca el producto y edita precioUnit
-   (por unidad) y precioMay (por mayor, desde 4 unidades).
+   TEJIDOS CASTAÑEDA — script.js
    ============================================================ */
 'use strict';
 
-/* ---- DATOS DE PRODUCTOS ---- */
-const PRODUCTOS_BASE = [
-  {"id": "buso-familiar-adulto", "nombre": "Buso Navideño Familiar · Adulto", "categoria": "busos", "fotos": 6, "precioUnit": 65000, "precioMay": 50000, "badgeTxt": "NAVIDAD", "desc": "Busos a juego para toda la familia: Santa, galletas de jengibre y Snoopy en rojo y azul noche.", "destacado": true, "recomendado": true, "tags": "familia santa snoopy jengibre adulto navidad"},
-  {"id": "buso-familiar-nino", "nombre": "Buso Navideño · Niño", "categoria": "busos", "fotos": 3, "precioUnit": 55000, "precioMay": 40000, "badgeTxt": "NAVIDAD", "desc": "La versión para niños de la línea familiar, para combinar con mamá y papá.", "destacado": false, "recomendado": false, "tags": "familia niños niño santa navidad"},
-  {"id": "buso-ecuador", "nombre": "Buso Navideño Línea Ecuador", "categoria": "busos", "fotos": 9, "precioUnit": 55000, "precioMay": 40000, "badgeTxt": "NAVIDAD", "desc": "Santa, renos y Grinch en rojo, azul y verde. Disponible en talla adulto y niño.", "destacado": false, "recomendado": false, "tags": "ecuador grinch santa reno adulto niño navidad"},
-  {"id": "buso-navideno", "nombre": "Buso Navideño Tejido", "categoria": "busos", "fotos": 11, "precioUnit": 50000, "precioMay": 35000, "badgeTxt": "NAVIDAD", "desc": "Renos, copos de nieve, pinos y Santa en rojo, verde y azul. Elige tu diseño en las fotos.", "destacado": false, "recomendado": true, "tags": "reno copos nieve pino santa navidad"},
-  {"id": "camiseta-navidena", "nombre": "Camiseta Navideña", "categoria": "camisetas", "fotos": 10, "precioUnit": 35000, "precioMay": 20000, "badgeTxt": "NAVIDAD", "desc": "Estampados navideños de Santa, renos, árboles y búhos, en varios colores.", "destacado": false, "recomendado": true, "tags": "camiseta santa reno arbol buho navidad"},
-  {"id": "pijama-tela", "nombre": "Pijama Navideña de Tela", "categoria": "pijamas", "fotos": 14, "precioUnit": 35000, "precioMay": 20000, "badgeTxt": "NAVIDAD", "desc": "Conjuntos con estampado navideño en rojo, verde y rosado: camiseta con pantalón o short.", "destacado": true, "recomendado": true, "tags": "pijama conjunto short pantalon santa navidad"},
-  {"id": "pijama-termica", "nombre": "Pijama Térmica Afelpada", "categoria": "pijamas", "fotos": 3, "precioUnit": 50000, "precioMay": 35000, "badgeTxt": "", "desc": "Pijamas suaves y térmicas para las noches frías, en crema, rosado y amarillo.", "destacado": false, "recomendado": false, "tags": "pijama termica frio kitty gato"},
-  {"id": "ruana-cuello-alto", "nombre": "Ruana Poncho Cuello Alto", "categoria": "ruanas", "fotos": 2, "precioUnit": 40000, "precioMay": 25000, "badgeTxt": "", "desc": "Poncho con cuello alto y botones, en estampado geométrico y bloques de color.", "destacado": false, "recomendado": false, "tags": "ruana poncho cuello alto"},
-  {"id": "ruana-trenzada", "nombre": "Ruana Poncho Trenzada", "categoria": "ruanas", "fotos": 2, "precioUnit": 50000, "precioMay": 28000, "badgeTxt": "", "desc": "Poncho de punto trenzado con borde afelpado, con capucha o cuello alto.", "destacado": false, "recomendado": false, "tags": "ruana poncho trenzado capucha"},
-  {"id": "ruana-andina", "nombre": "Ruana Poncho Andina", "categoria": "ruanas", "fotos": 5, "precioUnit": 45000, "precioMay": 35000, "badgeTxt": "", "desc": "Ponchos con diseños andinos, en rosado, café, caramelo y beige.", "destacado": false, "recomendado": true, "tags": "ruana poncho andina etnica"},
-  {"id": "ruana-peluche", "nombre": "Ruana Poncho Peluche", "categoria": "ruanas", "fotos": 2, "precioUnit": 50000, "precioMay": 38000, "badgeTxt": "", "desc": "Ponchos de textura peluche con capucha, en estampado y en negro.", "destacado": false, "recomendado": false, "tags": "ruana poncho peluche capucha"},
-  {"id": "ruana-capota", "nombre": "Ruana Capota Premium", "categoria": "ruanas", "fotos": 2, "precioUnit": 80000, "precioMay": 48000, "badgeTxt": "", "desc": "Ponchos con capucha: uno rosado de peluche y uno lila con borde andino.", "destacado": false, "recomendado": false, "tags": "ruana capota capucha peluche"},
-  {"id": "yeti-kuromi", "nombre": "Yeti Kuromi", "categoria": "yetis", "fotos": 2, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yeti con capucha con diseños de Kuromi.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija kuromi"},
-  {"id": "yeti-variados", "nombre": "Yeti Variados", "categoria": "yetis", "fotos": 6, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yetis con capucha en diseños variados: Sally, aguacate, leopardo, corazones y más.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija variados"},
-  {"id": "yeti-anime", "nombre": "Yeti Anime", "categoria": "yetis", "fotos": 5, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yetis con capucha de anime, para adulto.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija anime"},
-  {"id": "yeti-capibara", "nombre": "Yeti Capibara", "categoria": "yetis", "fotos": 2, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yetis con capucha de capibara.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija capibara"},
-  {"id": "yeti-equipos", "nombre": "Yeti Equipos de Fútbol", "categoria": "yetis", "fotos": 3, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yetis con capucha de equipos de fútbol.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija equipos"},
-  {"id": "yeti-goku", "nombre": "Yeti Goku", "categoria": "yetis", "fotos": 3, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yetis con capucha de Goku y Dragon Ball.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija goku"},
-  {"id": "yeti-ninas", "nombre": "Yeti Niñas", "categoria": "yetis", "fotos": 8, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yetis con capucha para niñas: Stitch, Hello Kitty, Mafalda, Margarita y más.", "destacado": true, "recomendado": true, "tags": "yeti capucha cobija ninas"},
-  {"id": "yeti-bolsillo-capibara", "nombre": "Yeti Bolsillo Capibara", "categoria": "yetis", "fotos": 3, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yeti de felpa con bolsillo y capibara bordado.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija bolsillo capibara"},
-  {"id": "yeti-bolsillo-koala", "nombre": "Yeti Bolsillo Koala", "categoria": "yetis", "fotos": 3, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yeti de felpa con bolsillo y koala bordado.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija bolsillo koala"},
-  {"id": "yeti-bolsillo-gatos", "nombre": "Yeti Bolsillo Gatos", "categoria": "yetis", "fotos": 6, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yeti de felpa con bolsillo y gatito bordado.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija bolsillo gatos"},
-  {"id": "yeti-bolsillo-otros", "nombre": "Yeti Bolsillo Variados", "categoria": "yetis", "fotos": 4, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yeti de felpa con bolsillo y personajes bordados variados.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija bolsillo otros"},
-  {"id": "yeti-bolsillo-snoopy", "nombre": "Yeti Bolsillo Snoopy", "categoria": "yetis", "fotos": 4, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yeti de felpa con bolsillo y Snoopy bordado.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija bolsillo snoopy"}
-];
+/* ---- PRODUCTOS ---- */
+const PRODUCTOS = [
+  /* ── RUANAS ── */
+  {
+    id: 'ruana-001',
+    nombre: 'Ruana Artesanal Premium',
+    categoria: 'ruanas',
+    fotos: ['fotos/ruanas/Ruana-A.png','fotos/ruanas/Ruana-B.png','fotos/ruanas/Ruana-C.png','fotos/ruanas/Ruana-D.png'],
+    fallback: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=70',
+    precioUnit: 48000, precioMay: 30000,
+    badge: 'badge-top', badgeTxt: 'TOP VENTAS', rating: 4.9, reviews: 47
+  },
 
-/* ============================================================
-   CONFIGURACIÓN — lo que más vas a querer cambiar está aquí
-   ============================================================ */
-const WHATSAPP        = '573106166431';
-const MIN_MAYORISTA   = 4;          // unidades para que aplique el precio por mayor
-const ENVIO_GRATIS    = 300000;     // compra mínima para envío gratis
-const ABONO           = 20000;      // abono para confirmar el pedido
-const NAVIDAD_MES_DIA = [11, 25];   // 25 de diciembre (mes 0-11)
+  /* ── CHOMPAS ── */
+  {
+    id: 'chompa-001',
+    nombre: 'Chompa Premium',
+    categoria: 'chompas',
+    fotos: ['fotos/chompas/Chompa-A.png','fotos/chompas/Chompa-B.png','fotos/chompas/Chompa-C.png'],
+    fallback: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&q=70',
+    precioUnit: 95000, precioMay: 75000,
+    badge: 'badge-hot', badgeTxt: 'HOT', rating: 4.8, reviews: 32
+  },
 
-const CATEGORIAS = {
-  busos:     'Busos navideños',
-  camisetas: 'Camisetas',
-  pijamas:   'Pijamas',
-  ruanas:    'Ruanas',
-  yetis:     'Yetis'
-};
+  /* ── YETIS ── */
+  {
+    id: 'yeti-anime',
+    nombre: 'Yeti Anime',
+    categoria: 'yetis',
+    fotos: ['fotos/yetis/anime/YetiA-A.jpg','fotos/yetis/anime/YetiA-B.jpg','fotos/yetis/anime/YetiA-C.jpg','fotos/yetis/anime/YetiA-D.jpg','fotos/yetis/anime/YetiA-E.jpg'],
+    fallback: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&q=70',
+    precioUnit: 85000, precioMay: 65000,
+    badge: 'badge-hot', badgeTxt: 'HOT', rating: 4.9, reviews: 18
+  },
+  {
+    id: 'yeti-capibara',
+    nombre: 'Yeti Capibara',
+    categoria: 'yetis',
+    fotos: ['fotos/yetis/capibara/YetiC-A.jpg','fotos/yetis/capibara/YetiC-B.jpg'],
+    fallback: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&q=70',
+    precioUnit: 85000, precioMay: 65000,
+    badge: 'badge-new', badgeTxt: 'NUEVO', rating: 4.8, reviews: 12
+  },
+  {
+    id: 'yeti-equipos',
+    nombre: 'Yeti Equipos',
+    categoria: 'yetis',
+    fotos: ['fotos/yetis/equipos/YetiE-A.jpg','fotos/yetis/equipos/YetiE-B.jpg','fotos/yetis/equipos/YetiE-C.jpg'],
+    fallback: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&q=70',
+    precioUnit: 85000, precioMay: 65000,
+    badge: 'badge-top', badgeTxt: 'TOP VENTAS', rating: 4.9, reviews: 24
+  },
+  {
+    id: 'yeti-goku',
+    nombre: 'Yeti Goku',
+    categoria: 'yetis',
+    fotos: ['fotos/yetis/goku/Yeti-G-A.jpg','fotos/yetis/goku/Yeti-G-B.jpg','fotos/yetis/goku/Yeti-G-C.jpg'],
+    fallback: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&q=70',
+    precioUnit: 85000, precioMay: 65000,
+    badge: 'badge-excl', badgeTxt: 'EXCLUSIVO', rating: 5.0, reviews: 9
+  },
+  {
+    id: 'yeti-ninas',
+    nombre: 'Yeti Niñas',
+    categoria: 'yetis',
+    fotos: ['fotos/yetis/ninas/Yeti-A.jpg','fotos/yetis/ninas/YetiN-B.jpg','fotos/yetis/ninas/YetiN-C.jpg','fotos/yetis/ninas/YetiN-D.jpg','fotos/yetis/ninas/YetiN-E.jpg','fotos/yetis/ninas/YetiN-F.jpg','fotos/yetis/ninas/YetiN-G.jpg','fotos/yetis/ninas/YetiN-H.jpg','fotos/yetis/ninas/YetiN-I.jpg','fotos/yetis/ninas/YetiN-J.jpg'],
+    fallback: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&q=70',
+    precioUnit: 85000, precioMay: 65000,
+    badge: 'badge-new', badgeTxt: 'NUEVO', rating: 4.9, reviews: 31
+  },
 
-/* Convierte "fotos: 6" en las rutas reales:
-   fotos/navidad/<id>/<id>-01.jpg  (foto grande)
-   fotos/navidad/<id>/t-01.jpg     (miniatura) */
-function nn(n) { return (n < 10 ? '0' : '') + n; }
-const PRODUCTOS = PRODUCTOS_BASE.map(function (p) {
-  var fotos = [], thumbs = [];
-  for (var i = 1; i <= p.fotos; i++) {
-    fotos.push('fotos/navidad/' + p.id + '/' + p.id + '-' + nn(i) + '.jpg');
-    thumbs.push('fotos/navidad/' + p.id + '/t-' + nn(i) + '.jpg');
+  /* ── CAMISETAS ── */
+  {
+    id: 'camiseta-basica',
+    nombre: 'Camiseta Básica',
+    categoria: 'camisetas',
+    fotos: ['fotos/Camisetas/Camiseta-Basica/Camiseta-A.png','fotos/Camisetas/Camiseta-Basica/Camiseta-B.png'],
+    fallback: 'https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=400&q=70',
+    precioUnit: 35000, precioMay: 20000,
+    badge: 'badge-new', badgeTxt: 'NUEVO', rating: 4.7, reviews: 15
+  },
+  {
+    id: 'camiseta-ceda',
+    nombre: 'Camisa Ceda Fría',
+    categoria: 'camisetas',
+    fotos: ['fotos/Camisetas/Camisa-Ceda-Fria/Camiseta-Ceda-A.png','fotos/Camisetas/Camisa-Ceda-Fria/Camiseta-Ceda-B.png'],
+    fallback: 'https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=400&q=70',
+    precioUnit: 75000, precioMay: 50000,
+    badge: 'badge-hot', badgeTxt: 'HOT', rating: 4.8, reviews: 20
+  },
+  {
+    id: 'camiseta-paño',
+    nombre: 'Camiseta Paño',
+    categoria: 'camisetas',
+    fotos: ['fotos/Camisetas/Camiseta-Paño/Camiseta-Paño-A.png','fotos/Camisetas/Camiseta-Paño/Camiseta-Paño-B.png'],
+    fallback: 'https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=400&q=70',
+    precioUnit: 85000, precioMay: 60000,
+    badge: 'badge-top', badgeTxt: 'TOP VENTAS', rating: 4.8, reviews: 18
+  },
+  {
+    id: 'camiseta-polo',
+    nombre: 'Camiseta Polo',
+    categoria: 'camisetas',
+    fotos: ['fotos/Camisetas/Camiseta-Polo/Camiseta-Polo-A.png','fotos/Camisetas/Camiseta-Polo/Camiseta-Polo-B.png'],
+    fallback: 'https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=400&q=70',
+    precioUnit: 35000, precioMay: 20000,
+    badge: 'badge-new', badgeTxt: 'NUEVO', rating: 4.7, reviews: 11
+  },
+
+  /* ── BUSOS ── */
+  {
+    id: 'buso-botones',
+    nombre: 'Buso Lana Botones',
+    categoria: 'busos',
+    fotos: ['fotos/Busos/Buso-Lana-Botones/Buso-Lana-Avir-A.png','fotos/Busos/Buso-Lana-Botones/Buso-Lana-Avir-b.png'],
+    fallback: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400&q=70',
+    precioUnit: 68000, precioMay: 40000,
+    badge: 'badge-new', badgeTxt: 'NUEVO', rating: 4.8, reviews: 8
+  },
+  {
+    id: 'buso-capota',
+    nombre: 'Buso Lana Capota',
+    categoria: 'busos',
+    fotos: ['fotos/Busos/Buso-Lana-Capota/Buso-Lana-A.png','fotos/Busos/Buso-Lana-Capota/Buso-Lana-B.png'],
+    fallback: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400&q=70',
+    precioUnit: 65000, precioMay: 50000,
+    badge: 'badge-hot', badgeTxt: 'HOT', rating: 4.9, reviews: 14
+  },
+  {
+    id: 'buso-cuello-redondo',
+    nombre: 'Buso Lana Cuello Redondo',
+    categoria: 'busos',
+    fotos: ['fotos/Busos/Buso-Lana-Cuello-Redondo/Buso-Lana-Curdon-A.png','fotos/Busos/Buso-Lana-Cuello-Redondo/Buso-Lana-Curdon-B.png'],
+    fallback: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400&q=70',
+    precioUnit: 68000, precioMay: 40000,
+    badge: 'badge-top', badgeTxt: 'TOP VENTAS', rating: 4.8, reviews: 19
+  },
+  {
+    id: 'buso-cuello-v',
+    nombre: 'Buso Lana Cuello V',
+    categoria: 'busos',
+    fotos: ['fotos/Busos/Buso-Lana-Cuello-V/Buso-Lana-V-A.png','fotos/Busos/Buso-Lana-Cuello-V/Buso-Lana-V-B.png'],
+    fallback: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400&q=70',
+    precioUnit: 68000, precioMay: 40000,
+    badge: 'badge-new', badgeTxt: 'NUEVO', rating: 4.7, reviews: 10
+  },
+  {
+    id: 'buso-cierre',
+    nombre: 'Buso Lana Cierre',
+    categoria: 'busos',
+    fotos: ['fotos/Busos/Buso-Lana-Sierre/Buso-Lana-Sierre-A.png','fotos/Busos/Buso-Lana-Sierre/Buso-Lana-Sierre-B.png'],
+    fallback: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400&q=70',
+    precioUnit: 68000, precioMay: 40000,
+    badge: 'badge-excl', badgeTxt: 'EXCLUSIVO', rating: 4.9, reviews: 7
+  },
+
+  /* ── COLECCIÓN ── */
+  {
+    id: 'coleccion-001',
+    nombre: 'Colección Pijama Bordado',
+    categoria: 'exclusivos',
+    fotos: ['fotos/colecciones/Coleccion-A.jpeg','fotos/colecciones/Coleccion-B.jpeg'],
+    fallback: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=400&q=70',
+    precioUnit: 55000, precioMay: 35000,
+    badge: 'badge-excl', badgeTxt: 'EXCLUSIVO', rating: 5.0, reviews: 9
   }
-  // Los productos con el mismo precio (misma categoría, unidad y mayor) suman
-  // unidades juntos para llegar al precio por mayor.
-  var grupo = p.categoria + '|' + p.precioUnit + '|' + p.precioMay;
-  return Object.assign({}, p, {
-    fotos: fotos, thumbs: thumbs, grupo: grupo,
-    badge: p.badgeTxt ? 'badge-navidad' : ''
-  });
-});
+];
 
 const TIEMPOS_ENTREGA = {
   bogota:'📦 Bogotá: 2–3 días hábiles', medellin:'📦 Medellín: 3–4 días hábiles',
@@ -88,51 +188,43 @@ let filtroActual = 'todos';
 let vistaActual = 'grid';
 let statsAnimadas = false;
 
-/* ---- UTILS ---- */
-function formatNum(n) { return n.toLocaleString('es-CO'); }
-function money(n)     { return '$' + formatNum(n); }
-function porId(id)    { return PRODUCTOS.find(function (p) { return p.id === id; }); }
-
 /* ============================================================
    SPA — NAVEGACIÓN
    ============================================================ */
 function navegarA(pagina) {
-  document.querySelectorAll('.page').forEach(function (p) { p.classList.remove('activa'); });
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('activa'); });
   var destino = document.getElementById('page-' + pagina);
   if (destino) destino.classList.add('activa');
-
-  document.querySelectorAll('[data-page]').forEach(function (a) {
+  document.querySelectorAll('[data-page]').forEach(function(a) {
     a.classList.toggle('nav-active', a.getAttribute('data-page') === pagina);
   });
-
   cerrarMenuMovil();
   window.scrollTo({ top: 0, behavior: 'smooth' });
-
   if (pagina === 'nosotros') setTimeout(animarEstadisticas, 400);
   if (pagina === 'contacto') actualizarEstadoHorario();
   return false;
 }
 
 function initSPA() {
-  document.querySelectorAll('.page').forEach(function (p) { p.classList.remove('activa'); });
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('activa'); });
   navegarA('inicio');
 }
 
 /* ============================================================
-   HEADER — OCULTAR AL BAJAR
+   HEADER — HIDE ON SCROLL
    ============================================================ */
 function initScroll() {
-  var topBar    = document.getElementById('top-bar');
-  var header    = document.getElementById('main-header');
+  var topBar = document.getElementById('top-bar');
+  var header = document.getElementById('main-header');
   var backToTop = document.getElementById('back-to-top');
-  var lastY     = 0;
-
-  window.addEventListener('scroll', function () {
+  var lastY = 0;
+  window.addEventListener('scroll', function() {
     var currentY = window.scrollY;
     var goingDown = currentY > lastY && currentY > 80;
-    topBar.classList.toggle('hidden', goingDown);
-    header.classList.toggle('hidden', goingDown);
-    backToTop.classList.toggle('visible', currentY > 300);
+    if (goingDown) { topBar.classList.add('hidden'); header.classList.add('hidden'); }
+    else           { topBar.classList.remove('hidden'); header.classList.remove('hidden'); }
+    if (currentY > 300) backToTop.classList.add('visible');
+    else backToTop.classList.remove('visible');
     lastY = currentY;
   }, { passive: true });
 }
@@ -146,248 +238,70 @@ function initMobileMenu() {
   var menu      = document.getElementById('mobile-menu');
   var searchBtn = document.getElementById('mobile-search-btn');
   var searchBar = document.getElementById('mobile-search-bar');
-
-  menuBtn.addEventListener('click', function (e) {
+  menuBtn.addEventListener('click', function(e) {
     e.stopPropagation();
     var open = menu.classList.toggle('open');
     menuIcon.className = open ? 'fas fa-times' : 'fas fa-bars';
   });
-
-  searchBtn.addEventListener('click', function (e) {
+  searchBtn.addEventListener('click', function(e) {
     e.stopPropagation();
     searchBar.classList.toggle('open');
     menu.classList.remove('open');
     menuIcon.className = 'fas fa-bars';
     if (searchBar.classList.contains('open')) searchBar.querySelector('input').focus();
   });
-
-  document.addEventListener('click', cerrarMenuMovil);
-  menu.addEventListener('click', function (e) { e.stopPropagation(); });
+  document.addEventListener('click', function() { cerrarMenuMovil(); });
+  menu.addEventListener('click', function(e) { e.stopPropagation(); });
 }
 
 function cerrarMenuMovil() {
-  var menu     = document.getElementById('mobile-menu');
+  var menu = document.getElementById('mobile-menu');
   var menuIcon = document.getElementById('menu-icon');
-  if (menu) {
-    menu.classList.remove('open');
-    if (menuIcon) menuIcon.className = 'fas fa-bars';
-  }
+  if (menu) { menu.classList.remove('open'); if (menuIcon) menuIcon.className = 'fas fa-bars'; }
 }
 
 /* ============================================================
    MODO OSCURO
    ============================================================ */
 function initDarkMode() {
-  var btn  = document.getElementById('dark-toggle');
+  var btn = document.getElementById('dark-toggle');
   var body = document.body;
-  var guardado = null;
-  try { guardado = localStorage.getItem('tc-dark'); } catch (e) {}
-  if (guardado === '1') {
+  if (localStorage.getItem('tc-dark') === '1') {
     body.classList.add('dark');
     btn.querySelector('i').className = 'fas fa-sun';
   }
-  btn.addEventListener('click', function () {
+  btn.addEventListener('click', function() {
     var isDark = body.classList.toggle('dark');
     btn.querySelector('i').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
-    try { localStorage.setItem('tc-dark', isDark ? '1' : '0'); } catch (e) {}
+    localStorage.setItem('tc-dark', isDark ? '1' : '0');
   });
-}
-
-/* ============================================================
-   NAVIDAD — nieve, guirnalda y cuenta regresiva
-   ============================================================ */
-function initNavidad() {
-  initGuirnalda();
-  initCuentaRegresiva();
-  initNieve();
-}
-
-/* Guirnalda de luces bajo el encabezado */
-function initGuirnalda() {
-  var cont = document.getElementById('garland');
-  if (!cont) return;
-  var colores = ['#e63946', '#f4c95d', '#2a9d5c', '#ffffff'];
-  var cantidad = Math.max(14, Math.round(window.innerWidth / 46));
-  var html = '';
-  for (var i = 0; i < cantidad; i++) {
-    html += '<i style="--c:' + colores[i % colores.length] + ';--d:' + ((i * 0.37) % 2.4).toFixed(2) + 's"></i>';
-  }
-  cont.innerHTML = html;
-}
-
-/* Cuenta regresiva hasta el 25 de diciembre (hora de Colombia) */
-function initCuentaRegresiva() {
-  var els = document.querySelectorAll('[data-cuenta-regresiva]');
-  if (!els.length) return;
-
-  function texto() {
-    var ahora = new Date();
-    var anio = ahora.getFullYear();
-    var meta = new Date(anio + '-12-25T00:00:00-05:00');
-    var diff = meta - ahora;
-    if (diff <= 0) {
-      // Pasó la Navidad de este año: mostramos el mensaje solo el mismo día
-      return (ahora - meta) < 86400000 ? '🎄 ¡Feliz Navidad de parte de Tejidos Castañeda!' : '';
-    }
-    var dias = Math.ceil(diff / 86400000);
-    return dias === 1 ? '🎄 ¡Mañana es Navidad!'
-                      : '🎄 Faltan ' + dias + ' días para Navidad';
-  }
-
-  els.forEach(function (el) {
-    var t = texto();
-    el.textContent = t;
-    el.style.display = t ? '' : 'none';
-  });
-}
-
-/* Nieve en canvas — liviana, se puede apagar y respeta "reducir movimiento" */
-function initNieve() {
-  var canvas = document.getElementById('snow-canvas');
-  var btn    = document.getElementById('snow-toggle');
-  var btnM   = document.getElementById('snow-toggle-m');
-  if (!canvas) return;
-
-  var reducir = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var guardado = null;
-  try { guardado = localStorage.getItem('tc-nieve'); } catch (e) {}
-  var activa = guardado === null ? !reducir : guardado === '1';
-
-  var ctx = canvas.getContext('2d');
-  var copos = [], raf = null, w = 0, h = 0;
-  var cantidad = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || window.innerWidth < 700 ? 38 : 70;
-
-  function medir() {
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    w = window.innerWidth; h = window.innerHeight;
-    canvas.width = w * dpr; canvas.height = h * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-  function crear() {
-    copos = [];
-    for (var i = 0; i < cantidad; i++) {
-      copos.push({
-        x: Math.random() * w, y: Math.random() * h,
-        r: 1 + Math.random() * 2.6, v: 0.35 + Math.random() * 0.9,
-        d: Math.random() * Math.PI * 2, s: 0.004 + Math.random() * 0.012
-      });
-    }
-  }
-  function dibujar() {
-    ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = 'rgba(255,255,255,0.88)';
-    for (var i = 0; i < copos.length; i++) {
-      var c = copos[i];
-      c.y += c.v; c.d += c.s; c.x += Math.sin(c.d) * 0.5;
-      if (c.y > h + 6) { c.y = -6; c.x = Math.random() * w; }
-      ctx.beginPath(); ctx.arc(c.x, c.y, c.r, 0, 6.2832); ctx.fill();
-    }
-    raf = requestAnimationFrame(dibujar);
-  }
-  function encender() {
-    canvas.style.display = 'block';
-    medir(); crear();
-    if (!raf) raf = requestAnimationFrame(dibujar);
-  }
-  function apagar() {
-    if (raf) cancelAnimationFrame(raf);
-    raf = null;
-    ctx.clearRect(0, 0, w, h);
-    canvas.style.display = 'none';
-  }
-  function pintarBoton() {
-    if (btn) {
-      btn.classList.toggle('off', !activa);
-      btn.setAttribute('aria-pressed', activa ? 'true' : 'false');
-      btn.title = activa ? 'Apagar la nieve' : 'Encender la nieve';
-    }
-    if (btnM) btnM.querySelector('span').textContent = activa ? 'Apagar la nieve' : 'Encender la nieve';
-  }
-  function alternar() {
-    activa = !activa;
-    try { localStorage.setItem('tc-nieve', activa ? '1' : '0'); } catch (e) {}
-    activa ? encender() : apagar();
-    pintarBoton();
-  }
-
-  window.addEventListener('resize', function () { if (activa) { medir(); crear(); } });
-  document.addEventListener('visibilitychange', function () {
-    if (!activa) return;
-    if (document.hidden) { cancelAnimationFrame(raf); raf = null; }
-    else if (!raf) raf = requestAnimationFrame(dibujar);
-  });
-  if (btn)  btn.addEventListener('click', alternar);
-  if (btnM) btnM.addEventListener('click', alternar);
-
-  pintarBoton();
-  if (activa) encender(); else apagar();
-}
-
-/* ============================================================
-   PRECIOS POR MAYOR (automático desde MIN_MAYORISTA unidades)
-   ============================================================ */
-function unidadesPorGrupo() {
-  var m = {};
-  carrito.forEach(function (i) { m[i.grupo] = (m[i.grupo] || 0) + i.qty; });
-  return m;
-}
-function precioActual(item, m) {
-  return (m[item.grupo] || 0) >= MIN_MAYORISTA ? item.precioMay : item.precioUnit;
-}
-function totalesCarrito() {
-  var m = unidadesPorGrupo(), subtotal = 0, ahorro = 0;
-  carrito.forEach(function (i) {
-    var pr = precioActual(i, m);
-    subtotal += pr * i.qty;
-    ahorro   += (i.precioUnit - pr) * i.qty;
-  });
-  return { m: m, subtotal: subtotal, ahorro: ahorro };
 }
 
 /* ============================================================
    CATÁLOGO
    ============================================================ */
 function initCatalog() {
-  aplicarFiltroYOrden();
-
-  document.getElementById('filter-btns').addEventListener('click', function (e) {
+  renderProductos(PRODUCTOS);
+  document.getElementById('filter-btns').addEventListener('click', function(e) {
     var btn = e.target.closest('.filter-btn');
     if (!btn) return;
-    marcarFiltro(btn.dataset.cat);
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    filtroActual = btn.dataset.cat;
     aplicarFiltroYOrden();
   });
   document.getElementById('sort-select').addEventListener('change', aplicarFiltroYOrden);
-
-  renderDestacados();
-  renderRecomendados();
-}
-
-function marcarFiltro(cat) {
-  filtroActual = cat;
-  document.querySelectorAll('.filter-btn').forEach(function (b) {
-    b.classList.toggle('active', b.dataset.cat === cat);
-  });
-}
-
-/* Se usa desde el pie de página y desde las tarjetas de inicio */
-function irACategoria(cat) {
-  marcarFiltro(cat);
-  document.getElementById('sort-select').value = 'destacados';
-  aplicarFiltroYOrden();
-  return navegarA('catalogo');
 }
 
 function aplicarFiltroYOrden() {
-  var lista = filtroActual === 'todos'
+  var filtrados = filtroActual === 'todos'
     ? PRODUCTOS.slice()
-    : PRODUCTOS.filter(function (p) { return p.categoria === filtroActual; });
-
+    : PRODUCTOS.filter(function(p) { return p.categoria === filtroActual; });
   var orden = document.getElementById('sort-select').value;
-  if (orden === 'precio-asc')  lista.sort(function (a, b) { return a.precioUnit - b.precioUnit; });
-  if (orden === 'precio-desc') lista.sort(function (a, b) { return b.precioUnit - a.precioUnit; });
-  if (orden === 'nombre')      lista.sort(function (a, b) { return a.nombre.localeCompare(b.nombre, 'es'); });
-
-  renderProductos(lista);
+  if (orden === 'precio-asc')  filtrados.sort(function(a,b) { return a.precioUnit - b.precioUnit; });
+  if (orden === 'precio-desc') filtrados.sort(function(a,b) { return b.precioUnit - a.precioUnit; });
+  if (orden === 'nombre')      filtrados.sort(function(a,b) { return a.nombre.localeCompare(b.nombre); });
+  renderProductos(filtrados);
 }
 
 function renderProductos(lista) {
@@ -395,25 +309,11 @@ function renderProductos(lista) {
   if (!grid) return;
   grid.innerHTML = '';
   grid.className = 'products-grid' + (vistaActual === 'list' ? ' list-view' : '');
-  if (lista.length === 0) {
-    grid.innerHTML = '<p class="sin-resultados">No encontramos productos con esa búsqueda. Prueba con “buso”, “pijama” o “yeti”.</p>';
+  if (!lista.length) {
+    grid.innerHTML = '<p style="color:var(--text-muted);padding:40px 0;text-align:center;">No se encontraron productos.</p>';
     return;
   }
-  lista.forEach(function (p) { grid.appendChild(crearTarjetaProducto(p)); });
-}
-
-function bloquePrecios(p) {
-  return '<div class="price-box">'
-    + '<div class="price-box-unit">'
-      + '<span class="price-label">Precio por unidad</span>'
-      + '<span class="price-amount">' + money(p.precioUnit) + '</span>'
-    + '</div>'
-    + '<div class="price-box-divider"></div>'
-    + '<div class="price-box-may">'
-      + '<span class="price-label gold">Por mayor · desde ' + MIN_MAYORISTA + ' unidades</span>'
-      + '<span class="price-amount green">' + money(p.precioMay) + ' <small>c/u</small></span>'
-    + '</div>'
-  + '</div>';
+  lista.forEach(function(p) { grid.appendChild(crearTarjetaProducto(p)); });
 }
 
 function crearTarjetaProducto(p) {
@@ -421,150 +321,141 @@ function crearTarjetaProducto(p) {
   card.className = 'product-card';
   var fotoActual = 0;
 
-  var thumbsHtml = '<div class="product-thumbnails">';
-  p.thumbs.forEach(function (t, i) {
-    thumbsHtml += '<button type="button" class="thumb' + (i === 0 ? ' active' : '') + '" data-idx="' + i + '" aria-label="Ver diseño ' + (i + 1) + '">'
-      + '<img src="' + t + '" loading="lazy" decoding="async" alt="" onerror="this.onerror=null;this.src=\'' + p.fotos[i] + '\'" /></button>';
-  });
-  thumbsHtml += '</div>';
+  var thumbsHtml = '';
+  if (p.fotos.length > 1) {
+    thumbsHtml = '<div class="product-thumbnails">';
+    p.fotos.forEach(function(foto, i) {
+      thumbsHtml += '<div class="thumb' + (i===0?' active':'') + '" data-idx="' + i + '">'
+        + '<img src="' + foto + '" onerror="this.src=\'' + p.fallback + '\'" alt="" /></div>';
+    });
+    thumbsHtml += '</div>';
+  }
 
   card.innerHTML =
     '<div class="product-img-wrap">'
-      + '<img class="main-product-img" src="' + p.fotos[0] + '" loading="lazy" decoding="async" alt="' + p.nombre + '" />'
-      + (p.badgeTxt ? '<span class="badge ' + p.badge + '">' + p.badgeTxt + '</span>' : '')
-      + '<span class="foto-contador">1 / ' + p.fotos.length + '</span>'
-      + '<button class="quick-view-btn" type="button" title="Vista rápida" aria-label="Vista rápida" onclick="abrirQuickView(\'' + p.id + '\');event.stopPropagation();"><i class="fas fa-eye"></i></button>'
+      + '<img class="main-product-img" src="' + p.fotos[0] + '" onerror="this.src=\'' + p.fallback + '\'" alt="' + p.nombre + '" />'
+      + '<span class="badge ' + p.badge + '">' + p.badgeTxt + '</span>'
+      + '<button class="quick-view-btn" title="Vista rápida" onclick="abrirQuickView(\'' + p.id + '\');event.stopPropagation();"><i class="fas fa-eye"></i></button>'
     + '</div>'
     + thumbsHtml
     + '<div class="product-info">'
-      + '<p class="product-cat">' + CATEGORIAS[p.categoria] + '</p>'
+      + '<p class="product-cat">' + p.categoria + '</p>'
       + '<h3>' + p.nombre + '</h3>'
-      + '<p class="product-desc">' + p.desc + '</p>'
-      + bloquePrecios(p)
-      + '<button class="btn-cart" type="button"><i class="fas fa-shopping-bag"></i> Agregar al carrito</button>'
+      + '<p class="product-rating">★★★★★ <span>(' + p.reviews + ' reseñas)</span></p>'
+      + '<div class="price-box">'
+        + '<div class="price-box-unit">'
+          + '<span class="price-label">PRECIO UNITARIO</span>'
+          + '<span class="price-amount">$' + formatNum(p.precioUnit) + '</span>'
+        + '</div>'
+        + '<button class="toggle-may-btn" onclick="toggleMay(this,event)">📦 Ver precio mayorista <i class="fas fa-chevron-down"></i></button>'
+        + '<div class="price-box-may" style="display:none;">'
+          + '<span class="price-label gold">PRECIO MAYORISTA</span>'
+          + '<span class="price-strike">$' + formatNum(p.precioUnit) + '</span>'
+          + '<span class="price-amount green">$' + formatNum(p.precioMay) + '</span>'
+        + '</div>'
+      + '</div>'
+      + '<button class="btn-cart"><i class="fas fa-shopping-bag"></i> Agregar al carrito</button>'
     + '</div>';
 
-  card.addEventListener('click', function (e) {
+  card.addEventListener('click', function(e) {
     var thumb = e.target.closest('.thumb');
     if (thumb) {
-      var idx = parseInt(thumb.dataset.idx, 10);
-      card.querySelector('.main-product-img').src = p.fotos[idx];
-      card.querySelector('.foto-contador').textContent = (idx + 1) + ' / ' + p.fotos.length;
-      card.querySelectorAll('.thumb').forEach(function (t) { t.classList.remove('active'); });
+      var idx = parseInt(thumb.dataset.idx);
+      card.querySelector('.main-product-img').src = p.fotos[idx] || p.fallback;
+      card.querySelectorAll('.thumb').forEach(function(t) { t.classList.remove('active'); });
       thumb.classList.add('active');
       fotoActual = idx;
-      return;
     }
-    if (e.target.closest('.btn-cart')) agregarProducto(p, fotoActual, 1);
+    if (e.target.closest('.btn-cart')) {
+      addToCart({ id:p.id, name:p.nombre, price:p.precioUnit,
+        img:p.fotos[fotoActual]||p.fotos[0], fallback:p.fallback, variant:'Único' });
+    }
   });
-
   return card;
-}
-
-function agregarProducto(p, idxFoto, cantidad) {
-  for (var i = 0; i < cantidad; i++) {
-    addToCart({
-      id: p.id + '::' + idxFoto,
-      name: p.nombre,
-      variant: 'Diseño ' + (idxFoto + 1),
-      img: p.fotos[idxFoto],
-      precioUnit: p.precioUnit,
-      precioMay: p.precioMay,
-      grupo: p.grupo
-    }, i === cantidad - 1);
-  }
 }
 
 function setView(v) {
   vistaActual = v;
-  document.getElementById('grid-btn').classList.toggle('active', v === 'grid');
-  document.getElementById('list-btn').classList.toggle('active', v === 'list');
+  document.getElementById('grid-btn').classList.toggle('active', v==='grid');
+  document.getElementById('list-btn').classList.toggle('active', v==='list');
   var grid = document.getElementById('products-grid');
-  if (grid) grid.className = 'products-grid' + (v === 'list' ? ' list-view' : '');
-}
-
-/* ---- Inicio: piezas destacadas ---- */
-function renderDestacados() {
-  var cont = document.getElementById('preview-grid');
-  if (!cont) return;
-  var html = '';
-  PRODUCTOS.filter(function (p) { return p.destacado; }).slice(0, 3).forEach(function (p) {
-    html += '<div class="preview-card" onclick="return irACategoria(\'' + p.categoria + '\')">'
-      + '<div class="preview-img-wrap"><img src="' + p.fotos[0] + '" loading="lazy" alt="' + p.nombre + '" /></div>'
-      + '<div class="preview-info">'
-        + '<span class="preview-cat">' + CATEGORIAS[p.categoria] + '</span>'
-        + '<h3>' + p.nombre + '</h3>'
-        + '<p class="preview-price"><strong>' + money(p.precioUnit) + '</strong> · por mayor ' + money(p.precioMay) + '</p>'
-      + '</div></div>';
-  });
-  html += '<div class="preview-card cta-card" onclick="return navegarA(\'catalogo\')">'
-    + '<div class="cta-card-inner"><i class="fas fa-gift"></i><p>Ver toda la colección de Navidad</p></div></div>';
-  cont.innerHTML = html;
-}
-
-/* ---- Página Recomendados ---- */
-function renderRecomendados() {
-  var cont = document.getElementById('recom-grid');
-  if (!cont) return;
-  cont.innerHTML = '';
-  PRODUCTOS.filter(function (p) { return p.recomendado; }).forEach(function (p) {
-    cont.appendChild(crearTarjetaProducto(p));
-  });
+  if (grid) grid.className = 'products-grid' + (v==='list' ? ' list-view' : '');
 }
 
 /* ============================================================
-   VISTA RÁPIDA
+   TOGGLE PRECIO MAYORISTA
+   ============================================================ */
+function toggleMay(btn, e) {
+  if (e) e.stopPropagation();
+  var box = btn.nextElementSibling;
+  var abierto = box.style.display !== 'none';
+  if (abierto) {
+    box.style.display = 'none';
+    btn.innerHTML = '📦 Ver precio mayorista <i class="fas fa-chevron-down"></i>';
+    btn.classList.remove('active');
+  } else {
+    box.style.display = 'flex';
+    btn.innerHTML = '📦 Ocultar mayorista <i class="fas fa-chevron-up"></i>';
+    btn.classList.add('active');
+  }
+}
+
+/* ============================================================
+   QUICK VIEW
    ============================================================ */
 function abrirQuickView(id) {
-  var p = porId(id);
+  var p = PRODUCTOS.find(function(x) { return x.id === id; });
   if (!p) return;
-
-  var qvContent = document.getElementById('qv-content');
-  var qvFoto = 0;
-
+  var qvFotoActual = 0;
   var thumbsHtml = '';
-  p.thumbs.forEach(function (t, i) {
-    thumbsHtml += '<button type="button" class="qv-thumb' + (i === 0 ? ' active' : '') + '" data-idx="' + i + '" aria-label="Ver diseño ' + (i + 1) + '">'
-      + '<img src="' + t + '" alt="" onerror="this.onerror=null;this.src=\'' + p.fotos[i] + '\'" /></button>';
+  p.fotos.forEach(function(foto, i) {
+    thumbsHtml += '<div class="qv-thumb' + (i===0?' active':'') + '" data-idx="' + i + '">'
+      + '<img src="' + foto + '" onerror="this.src=\'' + p.fallback + '\'" alt="" /></div>';
   });
-
-  qvContent.innerHTML =
+  document.getElementById('qv-content').innerHTML =
     '<div class="qv-gallery">'
-      + '<img class="main-img" id="qv-main-img" src="' + p.fotos[0] + '" alt="' + p.nombre + '" />'
+      + '<img class="main-img" id="qv-main-img" src="' + p.fotos[0] + '" onerror="this.src=\'' + p.fallback + '\'" alt="' + p.nombre + '" />'
       + '<div class="qv-thumbs" id="qv-thumbs">' + thumbsHtml + '</div>'
     + '</div>'
     + '<div class="qv-details">'
-      + '<p class="product-cat">' + CATEGORIAS[p.categoria] + '</p>'
+      + '<p class="product-cat">' + p.categoria + '</p>'
       + '<h2>' + p.nombre + '</h2>'
-      + '<p class="product-desc">' + p.desc + '</p>'
-      + '<p class="qv-diseno" id="qv-diseno">Diseño 1 de ' + p.fotos.length + '</p>'
-      + bloquePrecios(p)
-      + '<div class="qv-qty">'
-        + '<label>Cantidad:</label>'
-        + '<div class="qv-qty-control">'
-          + '<button type="button" onclick="cambiarQvQty(-1)" aria-label="Menos">−</button>'
-          + '<span class="qv-qty-num" id="qv-qty-num">1</span>'
-          + '<button type="button" onclick="cambiarQvQty(1)" aria-label="Más">+</button>'
+      + '<p class="product-rating">★★★★★ <span style="color:var(--text-muted);">(' + p.reviews + ' reseñas)</span></p>'
+      + '<div class="price-box" style="margin:12px 0;">'
+        + '<div class="price-box-unit"><span class="price-label">PRECIO UNITARIO</span><span class="price-amount">$' + formatNum(p.precioUnit) + '</span></div>'
+        + '<button class="toggle-may-btn" onclick="toggleMay(this,event)">📦 Ver precio mayorista <i class="fas fa-chevron-down"></i></button>'
+        + '<div class="price-box-may" style="display:none;">'
+          + '<span class="price-label gold">PRECIO MAYORISTA</span>'
+          + '<span class="price-strike">$' + formatNum(p.precioUnit) + '</span>'
+          + '<span class="price-amount green">$' + formatNum(p.precioMay) + '</span>'
         + '</div>'
       + '</div>'
-      + '<button class="btn-cart" type="button" style="width:100%;margin-top:8px;" id="qv-add-btn">'
-        + '<i class="fas fa-shopping-bag"></i> Agregar al carrito'
-      + '</button>'
+      + '<div class="qv-qty"><label>Cantidad:</label><div class="qv-qty-control">'
+        + '<button onclick="cambiarQvQty(-1)">−</button>'
+        + '<span class="qv-qty-num" id="qv-qty-num">1</span>'
+        + '<button onclick="cambiarQvQty(1)">+</button>'
+      + '</div></div>'
+      + '<button class="btn-cart" style="width:100%;margin-top:8px;" id="qv-add-btn"><i class="fas fa-shopping-bag"></i> Agregar al carrito</button>'
     + '</div>';
 
-  document.getElementById('qv-thumbs').addEventListener('click', function (e) {
-    var thumb = e.target.closest('.qv-thumb');
-    if (!thumb) return;
-    qvFoto = parseInt(thumb.dataset.idx, 10);
-    document.getElementById('qv-main-img').src = p.fotos[qvFoto];
-    document.getElementById('qv-diseno').textContent = 'Diseño ' + (qvFoto + 1) + ' de ' + p.fotos.length;
-    document.querySelectorAll('.qv-thumb').forEach(function (t) { t.classList.remove('active'); });
-    thumb.classList.add('active');
+  document.getElementById('qv-thumbs').addEventListener('click', function(e) {
+    var t = e.target.closest('.qv-thumb');
+    if (!t) return;
+    qvFotoActual = parseInt(t.dataset.idx);
+    document.getElementById('qv-main-img').src = p.fotos[qvFotoActual] || p.fallback;
+    document.querySelectorAll('.qv-thumb').forEach(function(x) { x.classList.remove('active'); });
+    t.classList.add('active');
   });
 
-  document.getElementById('qv-add-btn').addEventListener('click', function () {
-    var qty = parseInt(document.getElementById('qv-qty-num').textContent, 10) || 1;
-    agregarProducto(p, qvFoto, qty);
+  document.getElementById('qv-add-btn').addEventListener('click', function() {
+    var qty = parseInt(document.getElementById('qv-qty-num').textContent) || 1;
+    var mayBlock = document.querySelector('#qv-content .price-box-may');
+    var isMay = mayBlock && mayBlock.style.display !== 'none';
+    var precio = isMay ? p.precioMay : p.precioUnit;
+    for (var i = 0; i < qty; i++) {
+      addToCart({ id:p.id+(isMay?'-may':''), name:p.nombre+(isMay?' (Mayorista)':''),
+        price:precio, img:p.fotos[qvFotoActual]||p.fotos[0], fallback:p.fallback, variant:'Único' });
+    }
     closeQuickView();
   });
 
@@ -572,10 +463,9 @@ function abrirQuickView(id) {
   document.getElementById('qv-modal').classList.add('open');
 }
 
-window.cambiarQvQty = function (delta) {
+window.cambiarQvQty = function(delta) {
   var el = document.getElementById('qv-qty-num');
-  if (!el) return;
-  el.textContent = Math.max(1, parseInt(el.textContent, 10) + delta);
+  if (el) el.textContent = Math.max(1, parseInt(el.textContent) + delta);
 };
 
 function closeQuickView() {
@@ -589,177 +479,127 @@ function closeQuickView() {
 function initCart() {
   document.getElementById('cart-btn').addEventListener('click', openCart);
 }
-
 function openCart() {
   document.getElementById('cart-overlay').classList.add('open');
   document.getElementById('cart-sidebar').classList.add('open');
   renderCart();
 }
-
 function closeCart() {
   document.getElementById('cart-overlay').classList.remove('open');
   document.getElementById('cart-sidebar').classList.remove('open');
 }
-
-function addToCart(item, avisar) {
-  var existing = carrito.find(function (x) { return x.id === item.id; });
-  if (existing) existing.qty += 1;
-  else carrito.push({
-    id: item.id, name: item.name, variant: item.variant || 'Único', img: item.img,
-    precioUnit: item.precioUnit, precioMay: item.precioMay, grupo: item.grupo, qty: 1
-  });
+function addToCart(item) {
+  var ex = carrito.find(function(x) { return x.id === item.id; });
+  if (ex) { ex.qty++; }
+  else carrito.push({ id:item.id, name:item.name, price:item.price,
+    img:item.img, fallback:item.fallback||'', variant:item.variant||'Único', qty:1 });
   actualizarBadgeCarrito();
   renderCart();
-  if (avisar !== false) mostrarToast('✅ ' + item.name + ' (' + item.variant + ') añadido al carrito');
+  mostrarToast('✅ ' + item.name + ' añadido al carrito');
 }
-
 function renderCart() {
-  var itemsEl  = document.getElementById('cart-items');
-  var emptyEl  = document.getElementById('cart-empty');
+  var itemsEl = document.getElementById('cart-items');
+  var emptyEl = document.getElementById('cart-empty');
   var footerEl = document.getElementById('cart-footer');
-
-  if (carrito.length === 0) {
-    emptyEl.style.display = 'block';
-    footerEl.style.display = 'none';
-    itemsEl.innerHTML = '';
-    itemsEl.appendChild(emptyEl);
-    return;
+  if (!carrito.length) {
+    emptyEl.style.display = 'block'; footerEl.style.display = 'none';
+    itemsEl.innerHTML = ''; itemsEl.appendChild(emptyEl); return;
   }
-  emptyEl.style.display = 'none';
-  footerEl.style.display = 'block';
-  itemsEl.querySelectorAll('.cart-item').forEach(function (el) { el.remove(); });
-
-  var tot = totalesCarrito();
-
-  carrito.forEach(function (item) {
-    var unidades = tot.m[item.grupo] || 0;
-    var aplicaMay = unidades >= MIN_MAYORISTA;
-    var pr = aplicaMay ? item.precioMay : item.precioUnit;
-    var nota = aplicaMay
-      ? '<p class="cart-item-may">✓ Precio por mayor · ' + money(pr) + ' c/u</p>'
-      : '<p class="cart-item-hint">' + money(pr) + ' c/u · con ' + (MIN_MAYORISTA - unidades) + ' más de este precio baja a ' + money(item.precioMay) + '</p>';
-
+  emptyEl.style.display = 'none'; footerEl.style.display = 'block';
+  itemsEl.querySelectorAll('.cart-item').forEach(function(el) { el.remove(); });
+  carrito.forEach(function(item) {
     var div = document.createElement('div');
     div.className = 'cart-item';
     div.innerHTML =
-      '<div class="cart-item-img"><img src="' + item.img + '" alt="" /></div>'
+      '<div class="cart-item-img"><img src="' + item.img + '" onerror="this.src=\'' + (item.fallback||'') + '\'" alt="" /></div>'
       + '<div class="cart-item-info">'
         + '<h4>' + item.name + '</h4>'
         + '<p class="cart-item-variant">' + item.variant + '</p>'
-        + '<p class="cart-item-price">' + money(pr * item.qty) + (aplicaMay ? ' <s class="cart-item-strike">' + money(item.precioUnit * item.qty) + '</s>' : '') + '</p>'
-        + nota
+        + '<p class="cart-item-price">$' + formatNum(item.price * item.qty) + '</p>'
         + '<div class="cart-item-actions">'
-          + '<button class="qty-btn" data-action="minus" data-id="' + item.id + '" aria-label="Menos">−</button>'
+          + '<button class="qty-btn" data-action="minus" data-id="' + item.id + '">−</button>'
           + '<span class="qty-num">' + item.qty + '</span>'
-          + '<button class="qty-btn" data-action="plus" data-id="' + item.id + '" aria-label="Más">+</button>'
-          + '<button class="remove-btn" data-action="remove" data-id="' + item.id + '" aria-label="Quitar"><i class="fas fa-trash-alt"></i></button>'
+          + '<button class="qty-btn" data-action="plus" data-id="' + item.id + '">+</button>'
+          + '<button class="remove-btn" data-action="remove" data-id="' + item.id + '"><i class="fas fa-trash-alt"></i></button>'
         + '</div>'
       + '</div>';
-
-    div.addEventListener('click', function (e) {
+    div.addEventListener('click', function(e) {
       var btn = e.target.closest('[data-action]');
       if (!btn) return;
-      var action = btn.dataset.action, id = btn.dataset.id;
-      if (action === 'minus')  cambiarQty(id, -1);
-      if (action === 'plus')   cambiarQty(id, 1);
-      if (action === 'remove') eliminarItem(id);
+      if (btn.dataset.action === 'minus')  cambiarQty(btn.dataset.id, -1);
+      if (btn.dataset.action === 'plus')   cambiarQty(btn.dataset.id,  1);
+      if (btn.dataset.action === 'remove') eliminarItem(btn.dataset.id);
     });
     itemsEl.appendChild(div);
   });
   actualizarTotalesCart();
 }
-
 function cambiarQty(id, delta) {
-  var item = carrito.find(function (x) { return x.id === id; });
+  var item = carrito.find(function(x) { return x.id === id; });
   if (!item) return;
   item.qty += delta;
-  if (item.qty <= 0) carrito = carrito.filter(function (x) { return x.id !== id; });
-  actualizarBadgeCarrito();
-  renderCart();
+  if (item.qty <= 0) carrito = carrito.filter(function(x) { return x.id !== id; });
+  actualizarBadgeCarrito(); renderCart();
 }
-
 function eliminarItem(id) {
-  carrito = carrito.filter(function (x) { return x.id !== id; });
-  actualizarBadgeCarrito();
-  renderCart();
+  carrito = carrito.filter(function(x) { return x.id !== id; });
+  actualizarBadgeCarrito(); renderCart();
 }
-
 function actualizarTotalesCart() {
-  var t = totalesCarrito();
-  document.getElementById('cart-subtotal').textContent = money(t.subtotal + t.ahorro);
-  document.getElementById('cart-total').textContent    = money(t.subtotal);
-
-  var filaAhorro = document.getElementById('cart-ahorro-row');
-  if (filaAhorro) {
-    filaAhorro.style.display = t.ahorro > 0 ? 'flex' : 'none';
-    document.getElementById('cart-ahorro').textContent = '−' + money(t.ahorro);
-  }
-
-  var pct = Math.min(100, (t.subtotal / ENVIO_GRATIS) * 100);
+  var sub = carrito.reduce(function(a,x) { return a + x.price*x.qty; }, 0);
+  document.getElementById('cart-subtotal').textContent = '$' + formatNum(sub);
+  document.getElementById('cart-total').textContent    = '$' + formatNum(sub);
+  var pct = Math.min(100, (sub/300000)*100);
   document.getElementById('cart-progress-fill').style.width = pct + '%';
-  document.getElementById('cart-progress-label').textContent = t.subtotal >= ENVIO_GRATIS
+  document.getElementById('cart-progress-label').textContent = sub >= 300000
     ? '🎉 ¡Tienes envío gratis!'
-    : 'Te faltan ' + money(ENVIO_GRATIS - t.subtotal) + ' para envío gratis';
+    : 'Te faltan $' + formatNum(300000 - sub) + ' para envío gratis';
 }
-
 function actualizarBadgeCarrito() {
-  var total = carrito.reduce(function (acc, x) { return acc + x.qty; }, 0);
-  document.getElementById('cart-badge').textContent = total;
+  document.getElementById('cart-badge').textContent = carrito.reduce(function(a,x){return a+x.qty;},0);
 }
 
 /* ============================================================
-   PEDIDO POR WHATSAPP
+   ORDER MODAL
    ============================================================ */
 function openOrderModal() {
   document.getElementById('order-overlay').classList.add('open');
   document.getElementById('order-modal').classList.add('open');
   document.getElementById('order-name').focus();
 }
-
 function closeOrderModal() {
   document.getElementById('order-overlay').classList.remove('open');
   document.getElementById('order-modal').classList.remove('open');
 }
-
 function sendOrder() {
-  var campo = document.getElementById('order-name');
-  var nombre = campo.value.trim();
+  var nombre = document.getElementById('order-name').value.trim();
   if (!nombre) {
-    campo.style.borderColor = '#e63946';
-    setTimeout(function () { campo.style.borderColor = ''; }, 2000);
+    document.getElementById('order-name').style.borderColor = '#e63946';
+    setTimeout(function() { document.getElementById('order-name').style.borderColor = ''; }, 2000);
     return;
   }
-  var t = totalesCarrito();
-  var lineas = carrito.map(function (x) {
-    var aplica = (t.m[x.grupo] || 0) >= MIN_MAYORISTA;
-    var pr = aplica ? x.precioMay : x.precioUnit;
-    return x.qty + 'x ' + x.name + ' (' + x.variant + ') – ' + money(pr * x.qty) + (aplica ? ' [por mayor]' : '');
-  });
+  var sub = carrito.reduce(function(a,x) { return a+x.price*x.qty; }, 0);
   var msg = '¡Hola! Soy *' + nombre + '* y quiero realizar un pedido:\n\n'
-    + lineas.join('\n')
-    + '\n\n*Total:* ' + money(t.subtotal)
-    + (t.ahorro > 0 ? '\n_(Incluye precio por mayor: ahorro de ' + money(t.ahorro) + ')_' : '')
-    + '\n\n_Entiendo que debo enviar un abono de ' + money(ABONO) + ' para confirmar._\n¿Me indican cómo continuar?';
-  window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(msg), '_blank');
-  closeOrderModal();
-  closeCart();
-  carrito = [];
-  actualizarBadgeCarrito();
+    + carrito.map(function(x) { return x.qty+'x '+x.name+' – $'+formatNum(x.price*x.qty); }).join('\n')
+    + '\n\n*Total:* $' + formatNum(sub)
+    + '\n\n_Entiendo que debo enviar un abono de $20.000 para confirmar._\n¿Me indican cómo continuar?';
+  window.open('https://wa.me/573106166431?text='+encodeURIComponent(msg), '_blank');
+  closeOrderModal(); closeCart();
+  carrito = []; actualizarBadgeCarrito();
 }
 
 /* ============================================================
    TOAST
    ============================================================ */
 function mostrarToast(msg) {
-  var toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.classList.add('show');
-  clearTimeout(toast._timer);
-  toast._timer = setTimeout(function () { toast.classList.remove('show'); }, 3000);
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function() { t.classList.remove('show'); }, 3000);
 }
 
 /* ============================================================
-   ENTREGA POR CIUDAD
+   ENTREGA / ESTADÍSTICAS / HORARIO / BÚSQUEDA
    ============================================================ */
 function mostrarEntrega(ciudad) {
   var el = document.getElementById('entrega-label');
@@ -769,75 +609,57 @@ function mostrarEntrega(ciudad) {
   el.classList.add('visible');
 }
 
-/* ============================================================
-   ESTADÍSTICAS ANIMADAS (NOSOTROS)
-   ============================================================ */
 function animarEstadisticas() {
   if (statsAnimadas) return;
-  var nums = document.querySelectorAll('.nstat-num');
-  if (!nums.length) return;
   statsAnimadas = true;
-  nums.forEach(function (el) {
-    var target = parseInt(el.getAttribute('data-target'), 10) || 0;
-    var startTime = null, duration = 1800;
+  document.querySelectorAll('.nstat-num').forEach(function(el) {
+    var target = parseInt(el.getAttribute('data-target')) || 0;
+    var startTime = null;
     function step(ts) {
       if (!startTime) startTime = ts;
-      var progress = Math.min((ts - startTime) / duration, 1);
-      var eased = 1 - Math.pow(1 - progress, 3);
-      el.textContent = Math.floor(eased * target);
-      if (progress < 1) requestAnimationFrame(step);
-      else el.textContent = target;
+      var p = Math.min((ts-startTime)/1800, 1);
+      el.textContent = Math.floor((1-Math.pow(1-p,3))*target);
+      if (p < 1) requestAnimationFrame(step); else el.textContent = target;
     }
     requestAnimationFrame(step);
   });
 }
 
-/* ============================================================
-   ESTADO HORARIO (CONTACTO)
-   ============================================================ */
 function actualizarEstadoHorario() {
   var el = document.getElementById('estado-horario');
   if (!el) return;
-  var now  = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Bogota' }));
-  var dia  = now.getDay();
-  var hora = now.getHours() + now.getMinutes() / 60;
-  var abierto = (dia >= 1 && dia <= 5 && hora >= 8 && hora < 18) || (dia === 6 && hora >= 8 && hora < 14);
+  var now = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Bogota'}));
+  var d = now.getDay(), h = now.getHours() + now.getMinutes()/60;
+  var abierto = (d>=1&&d<=5&&h>=8&&h<18)||(d===6&&h>=8&&h<14);
   el.textContent = abierto ? '● Abierto ahora' : '● Cerrado ahora';
-  el.className   = 'estado-horario ' + (abierto ? 'abierto' : 'cerrado');
+  el.className = 'estado-horario ' + (abierto ? 'abierto' : 'cerrado');
 }
 
-/* ============================================================
-   BÚSQUEDA
-   ============================================================ */
 function initSearch() {
-  function quitarTildes(s) { return s.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
-
   function buscar(q) {
-    q = quitarTildes(q.toLowerCase().trim());
+    q = q.toLowerCase().trim();
     if (!q) return;
-    var resultados = PRODUCTOS.filter(function (p) {
-      var texto = quitarTildes((p.nombre + ' ' + CATEGORIAS[p.categoria] + ' ' + p.tags).toLowerCase());
-      return q.split(/\s+/).every(function (palabra) { return texto.indexOf(palabra) !== -1; });
-    });
-    marcarFiltro('todos');
     navegarA('catalogo');
-    setTimeout(function () { renderProductos(resultados); }, 50);
+    setTimeout(function() {
+      renderProductos(PRODUCTOS.filter(function(p) {
+        return p.nombre.toLowerCase().includes(q) || p.categoria.toLowerCase().includes(q);
+      }));
+    }, 50);
   }
   var di = document.getElementById('search-input');
-  if (di) di.addEventListener('keydown', function (e) { if (e.key === 'Enter') buscar(this.value); });
+  if (di) di.addEventListener('keydown', function(e) { if(e.key==='Enter') buscar(this.value); });
   var mi = document.querySelector('#mobile-search-bar input');
-  if (mi) mi.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-      document.getElementById('mobile-search-bar').classList.remove('open');
-      buscar(this.value);
-    }
+  if (mi) mi.addEventListener('keydown', function(e) {
+    if (e.key==='Enter') { document.getElementById('mobile-search-bar').classList.remove('open'); buscar(this.value); }
   });
 }
 
+function formatNum(n) { return n.toLocaleString('es-CO'); }
+
 /* ============================================================
-   INIT PRINCIPAL
+   INIT — UN SOLO DOMContentLoaded
    ============================================================ */
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
   initSPA();
   initScroll();
   initMobileMenu();
@@ -845,9 +667,7 @@ document.addEventListener('DOMContentLoaded', function () {
   initCatalog();
   initCart();
   initSearch();
-  initNavidad();
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { closeCart(); closeOrderModal(); closeQuickView(); }
+  document.addEventListener('keydown', function(e) {
+    if (e.key==='Escape') { closeCart(); closeOrderModal(); closeQuickView(); }
   });
 });
