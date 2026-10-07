@@ -2174,3 +2174,19 @@ body.cart-abierto .cart-fab { opacity: 0; pointer-events: none; }
 }
 .cart-fab-total { font-size: .88rem; font-weight: 700; }
 @media (max-width: 480px) { .cart-fab-total { font-size: .8rem; } .cart-fab { left: 12px; bottom: 16px; } }
+
+/* ---- Tallas ---- */
+.tallas { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
+.tallas-label { font-size: .78rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--text-muted); margin-right: 2px; }
+.talla-btn {
+  min-width: 40px; padding: 6px 12px;
+  border: 1.5px solid var(--border); border-radius: 50px;
+  background: var(--card-bg); color: var(--text);
+  font-size: .85rem; font-weight: 600; cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.talla-btn:hover { border-color: var(--navidad-rojo); }
+.talla-btn.active { background: var(--navidad-rojo); border-color: var(--navidad-rojo); color: #fff; }
+.tallas.falta { animation: tallaFalta .45s ease; }
+.tallas.falta .talla-btn:not(.active) { border-color: var(--navidad-rojo); }
+@keyframes tallaFalta { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-5px); } 40%,80% { transform: translateX(5px); } }

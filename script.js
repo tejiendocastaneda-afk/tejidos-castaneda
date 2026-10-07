@@ -9,37 +9,39 @@
 
 /* ---- DATOS DE PRODUCTOS ---- */
 const PRODUCTOS_BASE = [
-  {"id": "buso-familiar-adulto", "nombre": "Buso Navideño Familiar · Adulto", "categoria": "busos", "fotos": 6, "precioUnit": 65000, "precioMay": 50000, "badgeTxt": "NAVIDAD", "desc": "Busos a juego para toda la familia: Santa, galletas de jengibre y Snoopy en rojo y azul noche.", "destacado": true, "recomendado": true, "tags": "familia santa snoopy jengibre adulto navidad"},
-  {"id": "buso-familiar-nino", "nombre": "Buso Navideño Familiar · Niño", "categoria": "busos", "fotos": 3, "precioUnit": 55000, "precioMay": 40000, "badgeTxt": "NAVIDAD", "desc": "La versión para niños de la línea familiar, para combinar con mamá y papá.", "destacado": false, "recomendado": false, "tags": "familia niños niño santa navidad"},
-  {"id": "buso-ecuador", "nombre": "Buso Navideño Línea Ecuador", "categoria": "busos", "fotos": 9, "precioUnit": 55000, "precioMay": 40000, "badgeTxt": "NAVIDAD", "desc": "Santa, renos y Grinch en rojo, azul y verde. Disponible en talla adulto y niño.", "destacado": false, "recomendado": false, "tags": "ecuador grinch santa reno adulto niño navidad"},
-  {"id": "buso-navideno", "nombre": "Buso Navideño Tejido", "categoria": "busos", "fotos": 11, "precioUnit": 50000, "precioMay": 35000, "badgeTxt": "NAVIDAD", "desc": "Renos, copos de nieve, pinos y Santa en rojo, verde y azul. Elige tu diseño en las fotos.", "destacado": false, "recomendado": true, "tags": "reno copos nieve pino santa navidad"},
-  {"id": "camiseta-navidena", "nombre": "Camiseta Navideña", "categoria": "camisetas", "fotos": 10, "precioUnit": 35000, "precioMay": 20000, "badgeTxt": "NAVIDAD", "desc": "Estampados navideños de Santa, renos, árboles y búhos, en varios colores.", "destacado": false, "recomendado": true, "tags": "camiseta santa reno arbol buho navidad"},
-  {"id": "pijama-tela", "nombre": "Pijama Navideña de Tela", "categoria": "pijamas", "fotos": 14, "precioUnit": 35000, "precioMay": 20000, "badgeTxt": "NAVIDAD", "desc": "Conjuntos con estampado navideño en rojo, verde y rosado: camiseta con pantalón o short.", "destacado": true, "recomendado": true, "tags": "pijama conjunto short pantalon santa navidad"},
-  {"id": "pijama-termica", "nombre": "Pijama Térmica Afelpada", "categoria": "pijamas", "fotos": 3, "precioUnit": 50000, "precioMay": 35000, "badgeTxt": "", "desc": "Pijamas suaves y térmicas para las noches frías, en crema, rosado y amarillo.", "destacado": false, "recomendado": false, "tags": "pijama termica frio kitty gato"},
-  {"id": "ruana-cuello-alto", "nombre": "Ruana Poncho Cuello Alto", "categoria": "ruanas", "fotos": 2, "precioUnit": 40000, "precioMay": 25000, "badgeTxt": "", "desc": "Poncho con cuello alto y botones, en estampado geométrico y bloques de color.", "destacado": false, "recomendado": false, "tags": "ruana poncho cuello alto"},
-  {"id": "ruana-trenzada", "nombre": "Ruana Poncho Trenzada", "categoria": "ruanas", "fotos": 2, "precioUnit": 50000, "precioMay": 28000, "badgeTxt": "", "desc": "Poncho de punto trenzado con borde afelpado, con capucha o cuello alto.", "destacado": false, "recomendado": false, "tags": "ruana poncho trenzado capucha"},
-  {"id": "ruana-andina", "nombre": "Ruana Poncho Andina", "categoria": "ruanas", "fotos": 5, "precioUnit": 45000, "precioMay": 35000, "badgeTxt": "", "desc": "Ponchos con diseños andinos, en rosado, café, caramelo y beige.", "destacado": false, "recomendado": true, "tags": "ruana poncho andina etnica"},
-  {"id": "ruana-peluche", "nombre": "Ruana Poncho Peluche", "categoria": "ruanas", "fotos": 2, "precioUnit": 50000, "precioMay": 38000, "badgeTxt": "", "desc": "Ponchos de textura peluche con capucha, en estampado y en negro.", "destacado": false, "recomendado": false, "tags": "ruana poncho peluche capucha"},
-  {"id": "ruana-capota", "nombre": "Ruana Capota Premium", "categoria": "ruanas", "fotos": 2, "precioUnit": 80000, "precioMay": 48000, "badgeTxt": "", "desc": "Ponchos con capucha: uno rosado de peluche y uno lila con borde andino.", "destacado": false, "recomendado": false, "tags": "ruana capota capucha peluche"},
-  {"id": "yeti-kuromi", "nombre": "Yeti Kuromi", "categoria": "yetis", "fotos": 2, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yeti con capucha con diseños de Kuromi.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija kuromi"},
-  {"id": "yeti-variados", "nombre": "Yeti Variados", "categoria": "yetis", "fotos": 6, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yetis con capucha en diseños variados: Sally, aguacate, leopardo, corazones y más.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija variados"},
-  {"id": "yeti-anime", "nombre": "Yeti Anime", "categoria": "yetis", "fotos": 5, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yetis con capucha de anime, para adulto.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija anime"},
-  {"id": "yeti-capibara", "nombre": "Yeti Capibara", "categoria": "yetis", "fotos": 2, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yetis con capucha de capibara.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija capibara"},
-  {"id": "yeti-equipos", "nombre": "Yeti Equipos de Fútbol", "categoria": "yetis", "fotos": 3, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yetis con capucha de equipos de fútbol.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija equipos"},
-  {"id": "yeti-goku", "nombre": "Yeti Goku", "categoria": "yetis", "fotos": 3, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yetis con capucha de Goku y Dragon Ball.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija goku"},
-  {"id": "yeti-ninas", "nombre": "Yeti Niñas", "categoria": "yetis", "fotos": 8, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yetis con capucha para niñas: Stitch, Hello Kitty, Mafalda, Margarita y más.", "destacado": true, "recomendado": true, "tags": "yeti capucha cobija ninas"},
-  {"id": "yeti-bolsillo-capibara", "nombre": "Yeti Bolsillo Capibara", "categoria": "yetis", "fotos": 3, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yeti de felpa con bolsillo y capibara bordado.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija bolsillo capibara"},
-  {"id": "yeti-bolsillo-koala", "nombre": "Yeti Bolsillo Koala", "categoria": "yetis", "fotos": 3, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yeti de felpa con bolsillo y koala bordado.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija bolsillo koala"},
-  {"id": "yeti-bolsillo-gatos", "nombre": "Yeti Bolsillo Gatos", "categoria": "yetis", "fotos": 6, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yeti de felpa con bolsillo y gatito bordado.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija bolsillo gatos"},
-  {"id": "yeti-bolsillo-otros", "nombre": "Yeti Bolsillo Variados", "categoria": "yetis", "fotos": 4, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yeti de felpa con bolsillo y personajes bordados variados.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija bolsillo otros"},
-  {"id": "yeti-bolsillo-snoopy", "nombre": "Yeti Bolsillo Snoopy", "categoria": "yetis", "fotos": 4, "precioUnit": 80000, "precioMay": 65000, "badgeTxt": "", "desc": "Yeti de felpa con bolsillo y Snoopy bordado.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija bolsillo snoopy"}
+  {"id": "buso-familiar-adulto", "nombre": "Buso Navideño Familiar · Adulto", "categoria": "busos", "fotos": 7, "precioUnit": 65000, "precioMay": 50000, "tallas": ["S-M", "L-XL"], "badgeTxt": "NAVIDAD", "desc": "Busos a juego para toda la familia: Santa, galletas de jengibre, reno y Snoopy en rojo y azul noche. Tallas S-M y L-XL.", "destacado": true, "recomendado": true, "tags": "familia santa snoopy jengibre adulto navidad"},
+  {"id": "buso-familiar-nino", "nombre": "Buso Navideño Familiar · Niño", "categoria": "busos", "fotos": 4, "precioUnit": 50000, "precioMay": 40000, "tallas": ["4-6", "8-10", "12-14"], "badgeTxt": "NAVIDAD", "desc": "La versión para niños de la línea familiar, para combinar con mamá y papá. Tallas 4-6, 8-10 y 12-14.", "destacado": false, "recomendado": false, "tags": "familia niños niño santa snoopy navidad"},
+  {"id": "buso-crochet", "nombre": "Buso Navideño Crochet", "categoria": "busos", "fotos": 1, "precioUnit": 70000, "precioMay": 55000, "tallas": ["S", "M", "L", "XL"], "badgeTxt": "NAVIDAD", "desc": "Buso navideño en hilo crochet, con diseño del Grinch. Tallas S, M, L y XL.", "destacado": false, "recomendado": false, "tags": "crochet grinch tejido hilo navidad"},
+  {"id": "buso-ecuador", "nombre": "Buso Navideño Línea Ecuador", "categoria": "busos", "fotos": 9, "precioUnit": 55000, "precioMay": 40000, "tallas": [], "badgeTxt": "NAVIDAD", "desc": "Santa, renos y Grinch en rojo, azul y verde. Disponible en talla adulto y niño.", "destacado": false, "recomendado": false, "tags": "ecuador grinch santa reno adulto niño navidad"},
+  {"id": "buso-navideno", "nombre": "Buso Navideño Tejido", "categoria": "busos", "fotos": 11, "precioUnit": 50000, "precioMay": 35000, "tallas": [], "badgeTxt": "NAVIDAD", "desc": "Renos, copos de nieve, pinos y Santa en rojo, verde y azul. Elige tu diseño en las fotos.", "destacado": false, "recomendado": true, "tags": "reno copos nieve pino santa navidad"},
+  {"id": "camiseta-navidena", "nombre": "Camiseta Navideña", "categoria": "camisetas", "fotos": 10, "precioUnit": 35000, "precioMay": 20000, "tallas": [], "badgeTxt": "NAVIDAD", "desc": "Estampados navideños de Santa, renos, árboles y búhos, en varios colores.", "destacado": false, "recomendado": true, "tags": "camiseta santa reno arbol buho navidad"},
+  {"id": "pijama-tela", "nombre": "Pijama Navideña de Tela", "categoria": "pijamas", "fotos": 14, "precioUnit": 35000, "precioMay": 20000, "tallas": [], "badgeTxt": "NAVIDAD", "desc": "Conjuntos con estampado navideño en rojo, verde y rosado: camiseta con pantalón o short.", "destacado": true, "recomendado": true, "tags": "pijama conjunto short pantalon santa navidad"},
+  {"id": "pijama-termica", "nombre": "Pijama Térmica Afelpada", "categoria": "pijamas", "fotos": 3, "precioUnit": 50000, "precioMay": 35000, "tallas": [], "badgeTxt": "", "desc": "Pijamas suaves y térmicas para las noches frías, en crema, rosado y amarillo.", "destacado": false, "recomendado": false, "tags": "pijama termica frio kitty gato"},
+  {"id": "ruana-cuello-alto", "nombre": "Ruana Poncho Cuello Alto", "categoria": "ruanas", "fotos": 2, "precioUnit": 40000, "precioMay": 25000, "tallas": [], "badgeTxt": "", "desc": "Poncho con cuello alto y botones, en estampado geométrico y bloques de color.", "destacado": false, "recomendado": false, "tags": "ruana poncho cuello alto"},
+  {"id": "ruana-trenzada", "nombre": "Ruana Poncho Trenzada", "categoria": "ruanas", "fotos": 2, "precioUnit": 50000, "precioMay": 28000, "tallas": [], "badgeTxt": "", "desc": "Poncho de punto trenzado con borde afelpado, con capucha o cuello alto.", "destacado": false, "recomendado": false, "tags": "ruana poncho trenzado capucha"},
+  {"id": "ruana-andina", "nombre": "Ruana Poncho Andina", "categoria": "ruanas", "fotos": 3, "precioUnit": 45000, "precioMay": 35000, "tallas": [], "badgeTxt": "", "desc": "Ponchos con diseños andinos, en rosado, café, caramelo y beige.", "destacado": false, "recomendado": true, "tags": "ruana poncho andina etnica"},
+  {"id": "ruana-peluche", "nombre": "Ruana Poncho Peluche", "categoria": "ruanas", "fotos": 1, "precioUnit": 50000, "precioMay": 38000, "tallas": [], "badgeTxt": "", "desc": "Ponchos de textura peluche con capucha, en estampado y en negro.", "destacado": false, "recomendado": false, "tags": "ruana poncho peluche capucha"},
+  {"id": "ruana-capota", "nombre": "Ruana Capota Premium", "categoria": "ruanas", "fotos": 2, "precioUnit": 80000, "precioMay": 48000, "tallas": [], "badgeTxt": "", "desc": "Ponchos con capucha: uno rosado de peluche y uno lila con borde andino.", "destacado": false, "recomendado": false, "tags": "ruana capota capucha peluche"},
+  {"id": "yeti-kuromi", "nombre": "Yeti Kuromi", "categoria": "yetis", "fotos": 2, "precioUnit": 80000, "precioMay": 65000, "tallas": [], "badgeTxt": "", "desc": "Yeti con capucha con diseños de Kuromi.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija kuromi"},
+  {"id": "yeti-variados", "nombre": "Yeti Variados", "categoria": "yetis", "fotos": 6, "precioUnit": 80000, "precioMay": 65000, "tallas": [], "badgeTxt": "", "desc": "Yetis con capucha en diseños variados: Sally, aguacate, leopardo, corazones y más.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija variados"},
+  {"id": "yeti-anime", "nombre": "Yeti Anime", "categoria": "yetis", "fotos": 5, "precioUnit": 80000, "precioMay": 65000, "tallas": [], "badgeTxt": "", "desc": "Yetis con capucha de anime, para adulto.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija anime"},
+  {"id": "yeti-capibara", "nombre": "Yeti Capibara", "categoria": "yetis", "fotos": 2, "precioUnit": 80000, "precioMay": 65000, "tallas": [], "badgeTxt": "", "desc": "Yetis con capucha de capibara.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija capibara"},
+  {"id": "yeti-equipos", "nombre": "Yeti Equipos de Fútbol", "categoria": "yetis", "fotos": 3, "precioUnit": 80000, "precioMay": 65000, "tallas": [], "badgeTxt": "", "desc": "Yetis con capucha de equipos de fútbol.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija equipos"},
+  {"id": "yeti-goku", "nombre": "Yeti Goku", "categoria": "yetis", "fotos": 3, "precioUnit": 80000, "precioMay": 65000, "tallas": [], "badgeTxt": "", "desc": "Yetis con capucha de Goku y Dragon Ball.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija goku"},
+  {"id": "yeti-ninas", "nombre": "Yeti Niñas", "categoria": "yetis", "fotos": 8, "precioUnit": 80000, "precioMay": 65000, "tallas": [], "badgeTxt": "", "desc": "Yetis con capucha para niñas: Stitch, Hello Kitty, Mafalda, Margarita y más.", "destacado": true, "recomendado": true, "tags": "yeti capucha cobija ninas"},
+  {"id": "yeti-bolsillo-capibara", "nombre": "Yeti Bolsillo Capibara", "categoria": "yetis", "fotos": 3, "precioUnit": 80000, "precioMay": 65000, "tallas": [], "badgeTxt": "", "desc": "Yeti de felpa con bolsillo y capibara bordado.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija bolsillo capibara"},
+  {"id": "yeti-bolsillo-koala", "nombre": "Yeti Bolsillo Koala", "categoria": "yetis", "fotos": 3, "precioUnit": 80000, "precioMay": 65000, "tallas": [], "badgeTxt": "", "desc": "Yeti de felpa con bolsillo y koala bordado.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija bolsillo koala"},
+  {"id": "yeti-bolsillo-gatos", "nombre": "Yeti Bolsillo Gatos", "categoria": "yetis", "fotos": 6, "precioUnit": 80000, "precioMay": 65000, "tallas": [], "badgeTxt": "", "desc": "Yeti de felpa con bolsillo y gatito bordado.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija bolsillo gatos"},
+  {"id": "yeti-bolsillo-otros", "nombre": "Yeti Bolsillo Variados", "categoria": "yetis", "fotos": 4, "precioUnit": 80000, "precioMay": 65000, "tallas": [], "badgeTxt": "", "desc": "Yeti de felpa con bolsillo y personajes bordados variados.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija bolsillo otros"},
+  {"id": "yeti-bolsillo-snoopy", "nombre": "Yeti Bolsillo Snoopy", "categoria": "yetis", "fotos": 4, "precioUnit": 80000, "precioMay": 65000, "tallas": [], "badgeTxt": "", "desc": "Yeti de felpa con bolsillo y Snoopy bordado.", "destacado": false, "recomendado": false, "tags": "yeti capucha cobija bolsillo snoopy"}
 ];
 
 /* ============================================================
    CONFIGURACIÓN — lo que más vas a querer cambiar está aquí
    ============================================================ */
 const WHATSAPP        = '573106166431';
-const MIN_MAYORISTA   = 4;          // unidades para que aplique el precio por mayor
+const MIN_MAYORISTA   = 4;          // unidades para precio por mayor (productos de talla única)
+const MIN_MAYORISTA_TALLAS = 6;     // unidades para precio por mayor en productos CON tallas
 const ENVIO_GRATIS    = 300000;     // compra mínima para envío gratis
 const ABONO           = 20000;      // abono para confirmar el pedido
 const NAVIDAD_MES_DIA = [11, 25];   // 25 de diciembre (mes 0-11)
@@ -67,6 +69,8 @@ const PRODUCTOS = PRODUCTOS_BASE.map(function (p) {
   var grupo = p.id;
   return Object.assign({}, p, {
     fotos: fotos, thumbs: thumbs, grupo: grupo,
+    // Se puede forzar por producto con "minMayor": 5 en PRODUCTOS_BASE
+    minMay: p.minMayor || ((p.tallas && p.tallas.length) ? MIN_MAYORISTA_TALLAS : MIN_MAYORISTA),
     badge: p.badgeTxt ? 'badge-navidad' : ''
   });
 });
@@ -332,7 +336,7 @@ function unidadesPorGrupo() {
   return m;
 }
 function precioActual(item, m) {
-  return (m[item.grupo] || 0) >= MIN_MAYORISTA ? item.precioMay : item.precioUnit;
+  return (m[item.grupo] || 0) >= item.minMay ? item.precioMay : item.precioUnit;
 }
 function totalesCarrito() {
   var m = unidadesPorGrupo(), subtotal = 0, ahorro = 0;
@@ -410,16 +414,44 @@ function bloquePrecios(p) {
     + '</div>'
     + '<div class="price-box-divider"></div>'
     + '<div class="price-box-may">'
-      + '<span class="price-label gold">Por mayor · desde ' + MIN_MAYORISTA + ' unidades</span>'
+      + '<span class="price-label gold">Por mayor · desde ' + p.minMay + ' unidades</span>'
       + '<span class="price-amount green">' + money(p.precioMay) + ' <small>c/u</small></span>'
     + '</div>'
   + '</div>';
+}
+
+/* ---- Tallas (solo en los productos que tienen "tallas" en PRODUCTOS_BASE) ---- */
+function htmlTallas(p) {
+  if (!p.tallas || !p.tallas.length) return '';
+  var h = '<div class="tallas" role="group" aria-label="Elige tu talla"><span class="tallas-label">Talla:</span>';
+  p.tallas.forEach(function (t) {
+    h += '<button type="button" class="talla-btn" data-talla="' + t + '" aria-pressed="false">' + t + '</button>';
+  });
+  return h + '</div>';
+}
+/* Marca la talla elegida dentro de su contenedor y devuelve el valor */
+function marcarTalla(btn) {
+  var cont = btn.closest('.tallas');
+  cont.querySelectorAll('.talla-btn').forEach(function (b) {
+    b.classList.remove('active'); b.setAttribute('aria-pressed', 'false');
+  });
+  btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
+  cont.classList.remove('falta');
+  return btn.dataset.talla;
+}
+/* Si el producto tiene tallas y no se eligió ninguna: avisa y no agrega */
+function exigirTalla(p, talla, cont) {
+  if (!p.tallas || !p.tallas.length || talla) return true;
+  if (cont) { cont.classList.remove('falta'); void cont.offsetWidth; cont.classList.add('falta'); }
+  mostrarToast('👆 Elige una talla para agregar este buso');
+  return false;
 }
 
 function crearTarjetaProducto(p) {
   var card = document.createElement('div');
   card.className = 'product-card';
   var fotoActual = 0;
+  var tallaActual = null;
 
   var thumbsHtml = '<div class="product-thumbnails">';
   p.thumbs.forEach(function (t, i) {
@@ -440,11 +472,14 @@ function crearTarjetaProducto(p) {
       + '<p class="product-cat">' + CATEGORIAS[p.categoria] + '</p>'
       + '<h3>' + p.nombre + '</h3>'
       + '<p class="product-desc">' + p.desc + '</p>'
+      + htmlTallas(p)
       + bloquePrecios(p)
       + '<button class="btn-cart" type="button"><i class="fas fa-shopping-bag"></i> Agregar al carrito</button>'
     + '</div>';
 
   card.addEventListener('click', function (e) {
+    var tb = e.target.closest('.talla-btn');
+    if (tb) { tallaActual = marcarTalla(tb); return; }
     var thumb = e.target.closest('.thumb');
     if (thumb) {
       var idx = parseInt(thumb.dataset.idx, 10);
@@ -455,21 +490,25 @@ function crearTarjetaProducto(p) {
       fotoActual = idx;
       return;
     }
-    if (e.target.closest('.btn-cart')) agregarProducto(p, fotoActual, 1);
+    if (e.target.closest('.btn-cart')) {
+      if (!exigirTalla(p, tallaActual, card.querySelector('.tallas'))) return;
+      agregarProducto(p, fotoActual, 1, tallaActual);
+    }
   });
 
   return card;
 }
 
-function agregarProducto(p, idxFoto, cantidad) {
+function agregarProducto(p, idxFoto, cantidad, talla) {
   for (var i = 0; i < cantidad; i++) {
     addToCart({
-      id: p.id + '::' + idxFoto,
+      id: p.id + '::' + idxFoto + (talla ? '::' + talla : ''),
       name: p.nombre,
-      variant: 'Diseño ' + (idxFoto + 1),
+      variant: 'Diseño ' + (idxFoto + 1) + (talla ? ' · Talla ' + talla : ''),
       img: p.fotos[idxFoto],
       precioUnit: p.precioUnit,
       precioMay: p.precioMay,
+      minMay: p.minMay,
       grupo: p.grupo
     }, i === cantidad - 1);
   }
@@ -521,6 +560,7 @@ function abrirQuickView(id) {
 
   var qvContent = document.getElementById('qv-content');
   var qvFoto = 0;
+  var qvTalla = null;
 
   var thumbsHtml = '';
   p.thumbs.forEach(function (t, i) {
@@ -538,6 +578,7 @@ function abrirQuickView(id) {
       + '<h2>' + p.nombre + '</h2>'
       + '<p class="product-desc">' + p.desc + '</p>'
       + '<p class="qv-diseno" id="qv-diseno">Diseño 1 de ' + p.fotos.length + '</p>'
+      + htmlTallas(p)
       + bloquePrecios(p)
       + '<div class="qv-qty">'
         + '<label>Cantidad:</label>'
@@ -552,6 +593,12 @@ function abrirQuickView(id) {
       + '</button>'
     + '</div>';
 
+  var tallasQv = qvContent.querySelector('.tallas');
+  if (tallasQv) tallasQv.addEventListener('click', function (e) {
+    var tb = e.target.closest('.talla-btn');
+    if (tb) qvTalla = marcarTalla(tb);
+  });
+
   document.getElementById('qv-thumbs').addEventListener('click', function (e) {
     var thumb = e.target.closest('.qv-thumb');
     if (!thumb) return;
@@ -564,7 +611,8 @@ function abrirQuickView(id) {
 
   document.getElementById('qv-add-btn').addEventListener('click', function () {
     var qty = parseInt(document.getElementById('qv-qty-num').textContent, 10) || 1;
-    agregarProducto(p, qvFoto, qty);
+    if (!exigirTalla(p, qvTalla, tallasQv)) return;
+    agregarProducto(p, qvFoto, qty, qvTalla);
     closeQuickView();
   });
 
@@ -608,7 +656,7 @@ function addToCart(item, avisar) {
   if (existing) existing.qty += 1;
   else carrito.push({
     id: item.id, name: item.name, variant: item.variant || 'Único', img: item.img,
-    precioUnit: item.precioUnit, precioMay: item.precioMay, grupo: item.grupo, qty: 1
+    precioUnit: item.precioUnit, precioMay: item.precioMay, minMay: item.minMay, grupo: item.grupo, qty: 1
   });
   actualizarBadgeCarrito();
   renderCart();
@@ -635,11 +683,11 @@ function renderCart() {
 
   carrito.forEach(function (item) {
     var unidades = tot.m[item.grupo] || 0;
-    var aplicaMay = unidades >= MIN_MAYORISTA;
+    var aplicaMay = unidades >= item.minMay;
     var pr = aplicaMay ? item.precioMay : item.precioUnit;
     var nota = aplicaMay
       ? '<p class="cart-item-may">✓ Precio por mayor · ' + money(pr) + ' c/u</p>'
-      : '<p class="cart-item-hint">' + money(pr) + ' c/u · con ' + (MIN_MAYORISTA - unidades) + ' más de esta referencia baja a ' + money(item.precioMay) + '</p>';
+      : '<p class="cart-item-hint">' + money(pr) + ' c/u · con ' + (item.minMay - unidades) + ' más de esta referencia baja a ' + money(item.precioMay) + '</p>';
 
     var div = document.createElement('div');
     div.className = 'cart-item';
@@ -742,7 +790,7 @@ function sendOrder() {
   }
   var t = totalesCarrito();
   var lineas = carrito.map(function (x) {
-    var aplica = (t.m[x.grupo] || 0) >= MIN_MAYORISTA;
+    var aplica = (t.m[x.grupo] || 0) >= x.minMay;
     var pr = aplica ? x.precioMay : x.precioUnit;
     return x.qty + 'x ' + x.name + ' (' + x.variant + ') – ' + money(pr * x.qty) + (aplica ? ' [por mayor]' : '');
   });
