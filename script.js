@@ -9,7 +9,7 @@
 
 /* ---- DATOS DE PRODUCTOS ---- */
 const PRODUCTOS_BASE = [
-  {"id": "buso-familiar-adulto", "nombre": "Buso Navideño Familiar · Adulto", "categoria": "busos", "fotos": 7, "precioUnit": 65000, "precioMay": 50000, "tallas": ["S-M", "L-XL"], "badgeTxt": "NAVIDAD", "desc": "Busos a juego para toda la familia: Santa, galletas de jengibre, reno y Snoopy en rojo y azul noche. Tallas S-M y L-XL.", "destacado": true, "recomendado": true, "tags": "familia santa snoopy jengibre adulto navidad"},
+  {"id": "buso-familiar-adulto", "nombre": "Buso Navideño Familiar · Adulto", "categoria": "busos", "fotos": 8, "precioUnit": 65000, "precioMay": 50000, "tallas": ["S-M", "L-XL"], "badgeTxt": "NAVIDAD", "desc": "Busos a juego para toda la familia: Santa, galletas de jengibre, reno y Snoopy en rojo y azul noche. Tallas S-M y L-XL.", "destacado": true, "recomendado": true, "tags": "familia santa snoopy jengibre adulto navidad"},
   {"id": "buso-familiar-nino", "nombre": "Buso Navideño Familiar · Niño", "categoria": "busos", "fotos": 4, "precioUnit": 50000, "precioMay": 40000, "tallas": ["4-6", "8-10", "12-14"], "badgeTxt": "NAVIDAD", "desc": "La versión para niños de la línea familiar, para combinar con mamá y papá. Tallas 4-6, 8-10 y 12-14.", "destacado": false, "recomendado": false, "tags": "familia niños niño santa snoopy navidad"},
   {"id": "buso-crochet", "nombre": "Buso Navideño Crochet", "categoria": "busos", "fotos": 2, "precioUnit": 70000, "precioMay": 55000, "tallas": ["S", "M", "L", "XL"], "badgeTxt": "NAVIDAD", "desc": "Buso navideño en hilo crochet, con diseños del Grinch y Snoopy. Tallas S, M, L y XL.", "destacado": false, "recomendado": false, "tags": "crochet grinch tejido hilo navidad"},
   {"id": "buso-hilo-lana", "nombre": "Buso Navideño Hilo y Lana", "categoria": "busos", "fotos": 8, "precioUnit": 58000, "precioMay": 38000, "tallas": [], "badgeTxt": "NAVIDAD", "desc": "Busos de hilo y lana con copos de nieve y renos, en blanco, verde, rojo y negro.", "destacado": false, "recomendado": false, "tags": "hilo lana copos nieve reno blanco verde rojo negro navidad"},
@@ -52,7 +52,8 @@ const CATEGORIAS = {
   camisetas: 'Camisetas',
   pijamas:   'Pijamas',
   ruanas:    'Ruanas',
-  yetis:     'Yetis'
+  yetis:     'Yetis',
+  ofertas:   'Oferta'
 };
 
 /* Convierte "fotos: 6" en las rutas reales:
@@ -96,7 +97,27 @@ let statsAnimadas = false;
 /* ---- UTILS ---- */
 function formatNum(n) { return n.toLocaleString('es-CO'); }
 function money(n)     { return '$' + formatNum(n); }
-function porId(id)    { return PRODUCTOS.find(function (p) { return p.id === id; }); }
+/* ---- Ofertas (se editan en ofertas.js) ---- */
+function slug(t) {
+  return String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+const OFERTAS_LISTA = (typeof OFERTAS !== 'undefined' ? OFERTAS : []).map(function (o, i) {
+  var id = 'oferta-' + (slug(o.nombre) || i);
+  var fotos = (o.fotos || []).map(function (f) { return 'fotos/ofertas/' + f; });
+  var precio = Number(o.precio) || 0;
+  return {
+    id: id, nombre: o.nombre || 'Oferta', desc: o.desc || '', categoria: 'ofertas',
+    fotos: fotos, thumbs: fotos, tallas: o.tallas || [], tags: 'oferta ofertas',
+    esOferta: true, consultar: !precio,
+    precioUnit: precio, precioMay: precio, precioAntes: Number(o.antes) || 0,
+    minMay: 999999, grupo: id,               // sin precio por mayor
+    badgeTxt: 'OFERTA', badge: 'badge-oferta'
+  };
+});
+function porId(id) {
+  return PRODUCTOS.concat(OFERTAS_LISTA).find(function (p) { return p.id === id; });
+}
 
 /* ============================================================
    SPA — NAVEGACIÓN
@@ -365,6 +386,7 @@ function initCatalog() {
 
   renderDestacados();
   renderRecomendados();
+  renderOfertas();
 }
 
 function marcarFiltro(cat) {
@@ -383,9 +405,12 @@ function irACategoria(cat) {
 }
 
 function aplicarFiltroYOrden() {
+  // "Todos" muestra primero las ofertas y luego el resto; "Ofertas" solo las ofertas
   var lista = filtroActual === 'todos'
-    ? PRODUCTOS.slice()
-    : PRODUCTOS.filter(function (p) { return p.categoria === filtroActual; });
+    ? OFERTAS_LISTA.concat(PRODUCTOS)
+    : filtroActual === 'ofertas'
+      ? OFERTAS_LISTA.slice()
+      : PRODUCTOS.filter(function (p) { return p.categoria === filtroActual; });
 
   var orden = document.getElementById('sort-select').value;
   if (orden === 'precio-asc')  lista.sort(function (a, b) { return a.precioUnit - b.precioUnit; });
@@ -408,6 +433,15 @@ function renderProductos(lista) {
 }
 
 function bloquePrecios(p) {
+  if (p.esOferta) {
+    if (p.consultar) {
+      return '<div class="price-box price-oferta"><span class="price-label gold">Precio de oferta</span>'
+        + '<span class="price-amount consulta">Pregunta el precio por WhatsApp</span></div>';
+    }
+    return '<div class="price-box price-oferta"><span class="price-label gold">Precio de oferta</span>'
+      + '<span class="price-amount green">' + money(p.precioUnit)
+      + (p.precioAntes > p.precioUnit ? ' <s>' + money(p.precioAntes) + '</s>' : '') + '</span></div>';
+  }
   return '<div class="price-box">'
     + '<div class="price-box-unit">'
       + '<span class="price-label">Precio por unidad</span>'
@@ -475,7 +509,7 @@ function crearTarjetaProducto(p) {
       + '<p class="product-desc">' + p.desc + '</p>'
       + htmlTallas(p)
       + bloquePrecios(p)
-      + '<button class="btn-cart" type="button"><i class="fas fa-shopping-bag"></i> Agregar al carrito</button>'
+      + '<button class="btn-cart" type="button">' + (p.consultar ? '<i class="fab fa-whatsapp"></i> Preguntar el precio' : '<i class="fas fa-shopping-bag"></i> Agregar al carrito') + '</button>'
     + '</div>';
 
   card.addEventListener('click', function (e) {
@@ -501,6 +535,10 @@ function crearTarjetaProducto(p) {
 }
 
 function agregarProducto(p, idxFoto, cantidad, talla) {
+  if (p.consultar) {   // oferta sin precio: abre WhatsApp
+    window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent('¡Hola! Me interesa la oferta: ' + p.nombre + '. ¿Qué precio tiene?'), '_blank');
+    return;
+  }
   for (var i = 0; i < cantidad; i++) {
     addToCart({
       id: p.id + '::' + idxFoto + (talla ? '::' + talla : ''),
@@ -540,6 +578,19 @@ function renderDestacados() {
   html += '<div class="preview-card cta-card" onclick="return navegarA(\'catalogo\')">'
     + '<div class="cta-card-inner"><i class="fas fa-gift"></i><p>Ver toda la colección de Navidad</p></div></div>';
   cont.innerHTML = html;
+}
+
+/* ---- Página Ofertas ---- */
+function renderOfertas() {
+  var hay = OFERTAS_LISTA.length > 0;
+  document.querySelectorAll('[data-page="ofertas"], #ofertas-strip, .filter-ofertas').forEach(function (el) {
+    el.style.display = hay ? '' : 'none';
+  });
+  var cont = document.getElementById('ofertas-grid');
+  if (!cont) return;
+  cont.innerHTML = '';
+  if (!hay) { cont.innerHTML = '<p class="sin-resultados">Pronto habrá nuevas ofertas. ¡Escríbenos por WhatsApp y te avisamos!</p>'; return; }
+  OFERTAS_LISTA.forEach(function (o) { cont.appendChild(crearTarjetaProducto(o)); });
 }
 
 /* ---- Página Recomendados ---- */
@@ -590,7 +641,7 @@ function abrirQuickView(id) {
         + '</div>'
       + '</div>'
       + '<button class="btn-cart" type="button" style="width:100%;margin-top:8px;" id="qv-add-btn">'
-        + '<i class="fas fa-shopping-bag"></i> Agregar al carrito'
+        + (p.consultar ? '<i class="fab fa-whatsapp"></i> Preguntar el precio' : '<i class="fas fa-shopping-bag"></i> Agregar al carrito')
       + '</button>'
     + '</div>';
 
@@ -686,7 +737,7 @@ function renderCart() {
     var unidades = tot.m[item.grupo] || 0;
     var aplicaMay = unidades >= item.minMay;
     var pr = aplicaMay ? item.precioMay : item.precioUnit;
-    var nota = aplicaMay
+    var nota = item.minMay >= 999999 ? '<p class="cart-item-hint">' + money(pr) + ' c/u · precio de oferta</p>' : aplicaMay
       ? '<p class="cart-item-may">✓ Precio por mayor · ' + money(pr) + ' c/u</p>'
       : '<p class="cart-item-hint">' + money(pr) + ' c/u · con ' + (item.minMay - unidades) + ' más de esta referencia baja a ' + money(item.precioMay) + '</p>';
 
@@ -875,7 +926,7 @@ function initSearch() {
   function buscar(q) {
     q = quitarTildes(q.toLowerCase().trim());
     if (!q) return;
-    var resultados = PRODUCTOS.filter(function (p) {
+    var resultados = PRODUCTOS.concat(OFERTAS_LISTA).filter(function (p) {
       var texto = quitarTildes((p.nombre + ' ' + CATEGORIAS[p.categoria] + ' ' + p.tags).toLowerCase());
       return q.split(/\s+/).every(function (palabra) { return texto.indexOf(palabra) !== -1; });
     });

@@ -70,6 +70,7 @@
         <a href="#" onclick="return navegarA('inicio')" data-page="inicio">Inicio</a>
         <a href="#" onclick="return navegarA('catalogo')" data-page="catalogo">Catálogo</a>
         <a href="#" onclick="return navegarA('recomendados')" data-page="recomendados">Recomendados</a>
+        <a href="#" onclick="return navegarA('ofertas')" data-page="ofertas" class="nav-ofertas">Ofertas</a>
         <a href="#" onclick="return navegarA('nosotros')" data-page="nosotros">Nosotros</a>
         <a href="#" onclick="return navegarA('info')" data-page="info">Información</a>
         <a href="#" onclick="return navegarA('contacto')" data-page="contacto">Contacto</a>
@@ -129,6 +130,9 @@
       </a>
       <a href="#" onclick="return navegarA('recomendados')" data-page="recomendados">
         <i class="fas fa-star"></i> Recomendados
+      </a>
+      <a href="#" onclick="return navegarA('ofertas')" data-page="ofertas" class="nav-ofertas">
+        <i class="fas fa-fire"></i> Ofertas
       </a>
       <a href="#" onclick="return navegarA('nosotros')" data-page="nosotros">
         <i class="fas fa-heart"></i> Nosotros
@@ -197,6 +201,14 @@
               <span class="stat-label">Pedidos Entregados</span>
             </div>
           </div>
+        </div>
+      </section>
+
+      <!-- Franja de ofertas (se oculta sola si no hay ofertas) -->
+      <section class="ofertas-strip" id="ofertas-strip" style="display:none">
+        <div class="container ofertas-strip-inner">
+          <p><strong>🔥 Ofertas de Navidad.</strong> Mira las prendas con precio especial.</p>
+          <button class="btn-outline-dark" onclick="return navegarA('ofertas')">Ver ofertas</button>
         </div>
       </section>
 
@@ -351,6 +363,7 @@
         <div class="catalog-filters">
           <div class="filter-btns" id="filter-btns">
             <button class="filter-btn active" data-cat="todos">Todos</button>
+            <button class="filter-btn filter-ofertas" data-cat="ofertas">🔥 Ofertas</button>
             <button class="filter-btn" data-cat="busos">Busos</button>
             <button class="filter-btn" data-cat="camisetas">Camisetas</button>
             <button class="filter-btn" data-cat="pijamas">Pijamas</button>
@@ -394,6 +407,20 @@
     </div><!-- /page-recomendados -->
 
     <!-- PÁGINA: NOSOTROS -->
+    <div class="page" id="page-ofertas">
+      <div class="page-hero-small">
+        <div class="container">
+          <h1>Ofertas</h1>
+          <p>Precio especial por tiempo limitado · cada oferta tiene un precio único</p>
+        </div>
+      </div>
+      <div class="container">
+        <div class="products-grid" id="ofertas-grid">
+          <!-- Se renderiza con JS -->
+        </div>
+      </div>
+    </div><!-- /page-ofertas -->
+
     <div class="page" id="page-nosotros">
       <div class="container nosotros-container">
         <div class="nosotros-img-col">
@@ -714,6 +741,7 @@
     <i class="fas fa-chevron-up"></i>
   </button>
 
+  <script src="ofertas.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

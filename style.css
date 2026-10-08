@@ -2122,7 +2122,7 @@ body.dark .section-eyebrow { color: #ff9aa1; }
   .mobile-only  { display: flex !important; }
   #snow-toggle  { display: none; }
 }
-@media (min-width: 901px) and (max-width: 1000px) {
+@media (min-width: 901px) and (max-width: 1150px) {
   .header-inner { gap: 12px; padding: 0 16px; }
   .search-bar.desktop-only, .btn-whatsapp.desktop-only { display: none !important; }
 }
@@ -2190,3 +2190,16 @@ body.cart-abierto .cart-fab { opacity: 0; pointer-events: none; }
 .tallas.falta { animation: tallaFalta .45s ease; }
 .tallas.falta .talla-btn:not(.active) { border-color: var(--navidad-rojo); }
 @keyframes tallaFalta { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-5px); } 40%,80% { transform: translateX(5px); } }
+
+/* ---- Ofertas ---- */
+.badge-oferta { background: #e8590c; color: #fff; }
+.nav-ofertas { color: #ff9aa1 !important; font-weight: 700; }
+.price-oferta { padding: 12px 14px; gap: 2px; display: flex; flex-direction: column; }
+.price-oferta .price-amount s { font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 500; color: var(--text-muted); margin-left: 6px; }
+.price-oferta .consulta { font-size: 1rem; color: var(--navidad-rojo); }
+.ofertas-strip { background: #e8590c; color: #fff; padding: 12px 0; }
+.ofertas-strip-inner { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.ofertas-strip p { font-size: .98rem; }
+
+.filter-ofertas { border-color: #e8590c; color: #e8590c; font-weight: 700; }
+.filter-ofertas.active { background: #e8590c; border-color: #e8590c; color: #fff; }
