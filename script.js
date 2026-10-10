@@ -126,6 +126,10 @@ function porId(id) {
    SPA — NAVEGACIÓN
    ============================================================ */
 function navegarA(pagina) {
+  // Mantiene la sección en la URL para poder compartir enlaces directos.
+  if (window.location.hash !== '#' + pagina) {
+    history.replaceState(null, '', window.location.pathname + window.location.search + '#' + pagina);
+  }
   document.querySelectorAll('.page').forEach(function (p) { p.classList.remove('activa'); });
   var destino = document.getElementById('page-' + pagina);
   if (destino) destino.classList.add('activa');
@@ -144,7 +148,10 @@ function navegarA(pagina) {
 
 function initSPA() {
   document.querySelectorAll('.page').forEach(function (p) { p.classList.remove('activa'); });
-  navegarA('inicio');
+  var pagina = (window.location.hash || '').replace(/^#/, '').toLowerCase();
+  var paginasValidas = ['inicio', 'catalogo', 'recomendados', 'ofertas', 'nosotros', 'info', 'contacto'];
+  if (paginasValidas.indexOf(pagina) === -1) pagina = 'inicio';
+  navegarA(pagina);
 }
 
 /* ============================================================
