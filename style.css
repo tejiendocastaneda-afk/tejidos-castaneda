@@ -2246,3 +2246,45 @@ body.cart-abierto .cart-fab { opacity: 0; pointer-events: none; }
   .filter-btns::-webkit-scrollbar { display: none; }
   .filter-btn { flex-shrink: 0; padding: 7px 14px; }
 }
+
+
+/* ============================================================
+   AJUSTES: imagen grande completa + lupa visible + vista rápida
+   ============================================================ */
+/* Imagen de la tarjeta: se ve ENTERA (sin recortar), centrada */
+.product-img-wrap { background: #f3eee6; }
+body.dark .product-img-wrap { background: #141b17; }
+.product-img-wrap img { object-fit: contain; object-position: center; }
+.product-card:hover .product-img-wrap img { transform: none; }
+
+/* Lupa: más grande, siempre visible y con buen contraste sobre cualquier foto */
+.quick-view-btn {
+  opacity: 1 !important; transform: none !important;
+  width: 44px; height: 44px; right: 10px; bottom: 10px;
+  font-size: 1.15rem;
+  background: #fff; color: #1B0F0A;
+  border: 2px solid var(--gold);
+  box-shadow: 0 3px 12px rgba(0,0,0,.45);
+}
+.quick-view-btn:hover, .quick-view-btn:focus-visible { background: var(--gold); transform: scale(1.08) !important; }
+body.dark .quick-view-btn { background: #fff; color: #1B0F0A; }
+@media (max-width: 480px) {
+  .quick-view-btn { width: 40px; height: 40px; right: 8px; bottom: 8px; font-size: 1.05rem; }
+}
+
+/* Vista rápida: la foto grande se ve completa y enfocada.
+   (Antes la fila de miniaturas ensanchaba la columna y la foto se veía enorme y cortada) */
+.qv-content { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.qv-gallery, .qv-details { min-width: 0; }
+.qv-gallery .main-img {
+  display: block; width: 100%; aspect-ratio: auto;
+  height: min(68vh, 560px);
+  object-fit: contain; object-position: center;
+  background: #f3eee6;
+}
+body.dark .qv-gallery .main-img { background: #141b17; }
+.qv-thumbs { max-width: 100%; box-sizing: border-box; }
+@media (max-width: 768px) {
+  .qv-content { grid-template-columns: minmax(0, 1fr); }
+  .qv-gallery .main-img { height: min(56vh, 480px); }
+}

@@ -554,7 +554,7 @@ function crearTarjetaProducto(p) {
       + '<img class="main-product-img" src="' + p.fotos[0] + '" loading="lazy" decoding="async" alt="' + p.nombre + '" />'
       + badgeStock(p)
       + '<span class="foto-contador">1 / ' + p.fotos.length + '</span>'
-      + '<button class="quick-view-btn" type="button" title="Vista rápida" aria-label="Vista rápida" onclick="abrirQuickView(\'' + p.id + '\');event.stopPropagation();"><i class="fas fa-eye"></i></button>'
+      + '<button class="quick-view-btn" type="button" title="Ampliar y ver todas las fotos" aria-label="Ampliar y ver todas las fotos" onclick="abrirQuickView(\'' + p.id + '\');event.stopPropagation();"><i class="fas fa-magnifying-glass-plus"></i></button>'
     + '</div>'
     + thumbsHtml
     + '<div class="product-info">'
