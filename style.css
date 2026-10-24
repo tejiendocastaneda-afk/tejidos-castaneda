@@ -2288,3 +2288,37 @@ body.dark .qv-gallery .main-img { background: #141b17; }
   .qv-content { grid-template-columns: minmax(0, 1fr); }
   .qv-gallery .main-img { height: min(56vh, 480px); }
 }
+
+
+/* ============================================================
+   CELULAR: 1 producto por fila (uno debajo del otro)
+   Tarjeta grande, foto completa y textos en su tamaño normal.
+   ============================================================ */
+@media (max-width: 768px) {
+  .products-grid, .products-grid.recom-grid, .products-grid.list-view {
+    grid-template-columns: minmax(0, 1fr) !important; gap: 18px;
+  }
+  .product-card { border-radius: var(--radius); }
+  .badge { top: 10px; left: 10px; font-size: .68rem; padding: 3px 9px; }
+  .foto-contador { left: 10px; bottom: 10px; font-size: .7rem; padding: 2px 8px; }
+
+  .product-thumbnails { padding: 10px 14px 4px; gap: 6px; }
+  .thumb { width: 44px; height: 44px; border-radius: 6px; }
+
+  .product-info { padding: 14px 16px 18px; }
+  .product-cat { font-size: .72rem; margin-bottom: 6px; }
+  .product-info h3 { font-size: 1.1rem; line-height: 1.25; margin-bottom: 4px; }
+  .product-desc { display: block; }
+
+  .tallas { gap: 6px; margin: 4px 0 8px; }
+  .tallas-label { font-size: .78rem; width: auto; }
+  .talla-btn { min-width: 40px; padding: 6px 12px; font-size: .85rem; }
+
+  .price-box { padding: 0; gap: 0; }
+  .price-label { font-size: .68rem; letter-spacing: .06em; }
+  .price-amount { font-size: 1.3rem; }
+  .price-amount small { font-size: .75rem; }
+  .price-oferta { padding: 12px 14px; }
+  .price-oferta .consulta { font-size: 1rem; }
+  .btn-cart { padding: 11px; font-size: .9rem; gap: 8px; }
+}
